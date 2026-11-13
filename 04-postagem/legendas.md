@@ -4,7 +4,7 @@ Textos para copiar após aprovação. Fatos e personagens são fictícios. Usar 
 
 ## FV01 — segunda
 
-Emprestei o carro pra comprar pão. Ele voltou pronto pra levar minha ex ao altar. 🫠
+Emprestei o carro pra comprar pão. Ele voltou pronto pra levar meu ex ao altar. 🫠
 
 Você dirige ou entrega as chaves? Comenta **A: DIRIGIR** ou **B: ENTREGAR** até 20h30 de hoje. Cada perfil conta uma vez; vale a última escolha clara. Às 21h sai o final escolhido. Empate ou nenhum voto: mostramos os dois finais.
 

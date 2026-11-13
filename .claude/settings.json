@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Kairogen__generate_image",
+      "mcp__Kairogen__generate_video",
+      "mcp__Kairogen__generate_audio",
+      "mcp__Kairogen__animate_from_generation",
+      "mcp__Kairogen__create_narration",
+      "mcp__Kairogen__estimate_cost",
+      "mcp__Kairogen__estimate_audio_cost",
+      "mcp__Kairogen__get_generation",
+      "mcp__Kairogen__get_audio_job_status",
+      "mcp__Kairogen__get_credits",
+      "mcp__Kairogen__get_me_context",
+      "mcp__Kairogen__list_models",
+      "mcp__Kairogen__list_my_gallery",
+      "mcp__Kairogen__get_voices_data"
+    ]
+  }
+}

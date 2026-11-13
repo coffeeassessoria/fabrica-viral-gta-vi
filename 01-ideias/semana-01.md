@@ -4,7 +4,7 @@ Todas as situações, pessoas e quantidades narrativas são fictícias. Inspira�
 
 | ID / dia | Formato | Título | Gancho falado de 0–2s | Conflito e recompensa | Roteiro |
 | --- | --- | --- | --- | --- | --- |
-| FV01 / Seg | Você Decide | Meu carro foi pro casamento | “Meu carro tá de noivo!” | Lia encontra o carro emprestado enfeitado para casamento. Nando é motorista, e a noiva é a ex de Lia. A escolha é dirigir ou entregar as chaves. | [FV01](../02-roteiros/FV01.md) |
+| FV01 / Seg | Você Decide | Meu carro foi pro casamento | “Meu carro tá de noivo!” | Lia encontra o carro emprestado enfeitado para casamento. Nando é motorista, e o noivo é o ex de Lia. A escolha é dirigir ou entregar as chaves. | [FV01](../02-roteiros/FV01.md) |
 | FV02 / Ter | E se | A missão mais suspeita da cidade | “Todo mundo recebeu isso!” | Um aplicativo fictício manda devolver objetos. Eles montam uma festa para Dona Cida, que achava ter sido esquecida. | [FV02](../02-roteiros/FV02.md) |
 | FV03 / Qua | Você Decide | Meu amigo me colocou à venda | “Ele tá me vendendo!” | Lia ouve Nando negociando “a Lia”. Descobre um retrato seu pintado por ele para salvar a lanchonete. Escolhe assinar a obra ou arrematá-la. | [FV03](../02-roteiros/FV03.md) |
 | FV04 / Qui | E se | O GPS do meu pai | “O GPS sabe meu apelido!” | Uma rota gravada pelo pai leva Lia ao lugar da primeira sessão de cinema dos dois. A voz antiga termina e o pai aparece para continuar a conversa. | [FV04](../02-roteiros/FV04.md) |

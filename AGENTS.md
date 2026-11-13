@@ -21,6 +21,7 @@ Projeto editorial de histórias curtas originais, em português brasileiro. Padr
 - Nunca commitar, dar push, publicar ou enviar a cliente real sem confirmação explícita. Aprovação editorial e aprovação para publicação são distintas.
 - Não inserir segredos em arquivos, comandos ou respostas.
 - Manter IDs FV01–FV07 alinhados entre catálogo, roteiros, calendário e métricas. Alterações de data/horário devem chegar a todos os registros afetados.
+- Decisão editorial do usuário (13/11/2026): romances, casais e ex-parceiros das histórias são sempre entre homem e mulher. Não criar tramas com casal do mesmo sexo.
 - Nos formatos Você Decide, entregar as duas alternativas sem fingir que houve votação. Apurar comentários manualmente antes de produzir uma continuação.
 
 ## Verificação e continuidade
