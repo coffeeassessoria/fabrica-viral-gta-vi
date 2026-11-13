@@ -35,3 +35,11 @@ Aceite editorial: cada episódio apresenta o conflito em até 2s, tem progressã
 Pendente: aprovação editorial do usuário; confirmação de canais e datas; teste de uma cena no KAYROGEN para ajustar duração, vozes e identidade; geração dos vídeos e extras; revisão audiovisual; autorização e execução da postagem. Nenhum MP4 foi gerado, nenhuma postagem agendada e nenhuma métrica coletada. Arquivos locais sem commit e sem push.
 
 Verificação documental concluída: sete IDs e roteiros de 36s, sete legendas principais, 21 janelas de postagem, cobertura de métricas e links relativos. Isso não valida qualidade audiovisual nem funcionamento do KAYROGEN.
+
+### Atualização — 13/11/2026 (piloto do ep01)
+
+- **Renderizado:** `03-videos/ep01-meu-carro-foi-pro-casamento.mp4` — 77,3 s, 1080×1920, 30 fps. Narração e trilha geradas na Kairogen; 18 imagens geradas na Kairogen com movimento de câmera, legenda e efeitos sonoros feitos na montagem (`03-videos/montagem/build-ep01.py`). Não é vídeo animado: o plano Essential não libera modelos de vídeo.
+- **Só texto:** ep02–ep07 têm roteiro narrado (`03-videos/roteiros-narrados.md`), legenda e capa em `.txt`. Duração de 65–85 s é estimativa; nenhum foi narrado.
+- **Mudança de formato:** os roteiros de 36 s em diálogo foram adaptados para narração de 65–85 s com "Comenta 1 ou 2" e "Amanhã eu continuo com a opção mais votada" em todos os sete, a pedido do usuário. Isso altera FV02/FV04 (antes fechados) e a saga FV05–FV07 (antes sem votação). `02-roteiros/` e `04-postagem/` não foram alterados.
+- **Pendências:** sincronia da legenda do ep01 não conferida por escuta; nada publicado nem agendado; continuações dependem de apuração real dos comentários.
+- **Créditos Kairogen:** 72 usados no piloto, 63 restantes na data.
