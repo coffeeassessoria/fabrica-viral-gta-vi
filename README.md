@@ -45,3 +45,7 @@ Os testes usam valores de login temporários em memória, sem enviá-los à Verc
 Não commitar `.env*`, `.vercel`, backups, perfis de navegador ou arquivos privados. O banco novo foi criado para este projeto; não reutilizar credenciais de outros clientes. Não expor o servidor local à rede pública. Login é de operador único nesta versão; múltiplos usuários exigem autorização por workspace antes de ampliar o acesso.
 
 Se aparecer “rascunho preservado”, não limpe os dados do navegador antes de reconectar ou baixar um backup. O salvamento no banco continua disponível após fechar o navegador ou reiniciar a hospedagem. O rascunho depende do mesmo navegador e endereço.
+
+## Pacote editorial preservado
+
+As cinco pastas `01-ideias` a `05-metricas`, os sete roteiros e o calendário originais foram preservados do commit 28addb1. Consulte [PACOTE-EDITORIAL.md](PACOTE-EDITORIAL.md) para o registro dessa entrega. A publicação da aplicação não equivale à aprovação ou postagem das histórias.

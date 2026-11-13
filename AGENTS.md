@@ -9,3 +9,12 @@
 - `npm run build` e `npm test` devem passar. Testes reais de persistência usam WORKSPACE_ID isolado e limpam somente esse workspace; nunca limpar dados principais.
 - Deploy inicial é de prévia. Credenciais de acesso foram autorizadas apenas para prévia; não replicar em produção/desenvolvimento sem novo escopo autorizado.
 - Não commitar, dar push ou publicar sem confirmação explícita do usuário. Atualizar README e VALIDACAO quando o estado real mudar.
+
+## Conteúdo editorial preservado
+
+- `01-ideias/`, `02-roteiros/`, `03-videos/`, `04-postagem/` e `05-metricas/` mantêm o pacote FV01–FV07 anterior à aplicação. `PACOTE-EDITORIAL.md` preserva seu README histórico.
+- Histórias e personagens são fictícios. Não apresentar ficção como notícia, vazamento, gameplay ou informação oficial de GTA VI.
+- Não copiar missões, personagens, cenas, mapas, músicas, logotipos ou gameplay. A inspiração é o gênero e a atmosfera urbana.
+- Não inventar métricas, desempenho, aprovações, orçamentos ou capacidades de serviços. Separar roteiros/prompt preparados de vídeos realmente gerados.
+- Manter IDs FV01–FV07 alinhados entre catálogo, roteiros, calendário e métricas. Não declarar resultado de votação sem apuração real.
+- Aprovação editorial é diferente de autorização para postagem. Nenhuma integração autoriza postagem por conta própria.
