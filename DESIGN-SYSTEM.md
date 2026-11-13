@@ -4,7 +4,7 @@
 
 A interface organiza a criação de histórias originais em um estúdio escuro, com paisagem litorânea, tipografia expressiva e referências cromáticas ao universo visual de GTA VI.
 
-O produto real é a Fábrica Viral, não o site da Rockstar. Público inferido pelo código: operadores que organizam ideias, roteiros, agenda e métricas; o arquivo recebido não contém autenticação. A interface **must** manter o contrato `POST actions` e as coleções `fabrica_checklist`, `fabrica_calendario`, `fabrica_metricas` e `fabrica_rodar`. Ela **must not** representar conexão, geração de vídeo ou postagem como concluídas sem resultado real.
+O produto real é a Fábrica Viral, não o site da Rockstar. Público inferido pelo código: operadores que organizam ideias, roteiros, agenda e métricas; a aplicação atual tem acesso privado de operador único. A interface **must** manter o contrato `POST actions` e as coleções `fabrica_checklist`, `fabrica_calendario`, `fabrica_metricas` e `fabrica_rodar`. Ela **must not** representar conexão, geração de vídeo ou postagem como concluídas sem resultado real.
 
 A [referência oficial da Rockstar](https://www.rockstargames.com/VI) orienta atmosfera, contraste e cores. A paisagem SVG e a marca FV são próprias. Não foram extraídos fontes proprietárias, cenas, personagens ou logotipos. A interface **must** identificar o projeto como independente e **should** evitar informações de lançamento, pois não fazem parte do fluxo operacional.
 
@@ -111,3 +111,12 @@ O sistema **must not** usar “AO VIVO”, “conectado” ou “publicado” ap
 - [ ] Conferir 320px, 390px, 1440px, zoom e redução de movimento.
 - [ ] Conferir fontes indisponíveis e texto longo.
 - [ ] Revalidar o endpoint real no ambiente proprietário antes de publicar.
+
+## Mesa de produção e revisão de publicação
+
+- A mesa **must** preservar roteiros, etapa e link de vídeo no workspace. O pacote **must** indicar produção externa pelo Claude; o painel **must not** sugerir conexão KAIROGEN própria.
+- Campos de texto longo **must** ter rótulos associados por for/id. URLs incompletas **must** continuar editáveis como rascunho; a validação para publicação **must** exigir HTTPS e ausência de credenciais no endereço.
+- Conta, legenda, vídeo, modalidade e horário **must** ser apresentados antes da confirmação. A ação final **must** ficar desabilitada até o consentimento por envio e durante a requisição; alterações **must** invalidar a revisão anterior.
+- Repetição após falha **must** reutilizar o ID daquela revisão. Resultado incerto **must** orientar a consulta de histórico, sem confirmar publicação ou reenviar automaticamente.
+- Modalidades sem suporte confirmado **must** ficar bloqueadas com motivo. Analytics ausente **must** manter os valores como registros manuais, sem anunciar sincronização.
+- Componentes novos **must** seguir a tabela comum de estados e tokens. Os testes **must** cobrir teclado nativo, nome dos campos, ausência de overflow em celular, consentimento e restauração dos roteiros após reabrir o navegador.

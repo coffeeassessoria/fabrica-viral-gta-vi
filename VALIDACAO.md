@@ -1,3 +1,19 @@
+# Fluxo Claude/KAIROGEN e HubPost — revisão local de 13/11/2026
+
+- O usuário esclareceu que a KAIROGEN será operada somente pelo Claude. A interface nova retira a conexão e geração direta e permite armazenar roteiros, importar opcionalmente os sete já preparados e exportar o pacote Markdown.
+- Produção é um campo opcional no workspace JSON. Dados antigos sem esse campo continuam válidos; checklist, calendário, métricas e histórico são preservados. URLs incompletas podem ser salvas como rascunho; o link final é validado antes de qualquer postagem.
+- Consulta autenticada real na prévia confirmou HubPost autorizado, contas TIKTOK @gtavi1000grau e YOUTUBE @fabricaviralgtavi1000grau. Ferramentas anunciadas: get_account, list_social_accounts, list_posts, get_post, create_post, edit_post, delete_post, list_media, show_upload_widget, get_upload_url e confirm_upload. get_analytics não está disponível.
+- A revisão de publicação exige conta, vídeo, legenda, modalidade e confirmação. O contrato confere os campos do schema antes do envio. Schemas ainda não adaptados e mídia que exige upload sem adaptador ficam bloqueados; a capacidade de envio do vídeo real ainda precisa de validação após implantação.
+- Idempotência usa fv_jobs com UUID por revisão e hash dos parâmetros. Resposta confirmada é reutilizada; um envio pendente ou de resultado incerto nunca é repetido automaticamente. A rota genérica não permite contornar a revisão para create_post.
+- Navegador real: sete roteiros, URL parcial, checklist, calendário, métricas, regra e setup restaurados após fechar todo o navegador e reiniciar o servidor; rascunho interrompido recuperado. Postagem simulada exige revisão e consentimento, preserva o ID após falha e não chama o HubPost real. Mesa de produção e postagem sem erros JavaScript, sem violações axe detectadas e sem overflow em 390px. Evidência: tests/artifacts/persistence-browser.json (ignorado no Git).
+- Build TypeScript/Vite concluído; bundle de aproximadamente 335 kB JS / 105 kB gzip. Avisos use-client de lucide-react são informativos.
+- npm test passou no banco real com registros isolados: compatibilidade de workspace, roteiro com URL parcial, sessão, conflito, criptografia, contrato de envio, repetição, concorrência e resultado incerto. Os envios dos testes são callbacks simulados, sem conexão ao HubPost.
+- Canal YouTube criado após confirmação específica dos Termos: UCV92NvRghmpRW54P0zjrB2g, @FabricaViralGTAVI1000Grau. Nenhum vídeo enviado. Conta pública confirmada pela página do canal.
+- Estado de publicação desta mudança: local, ainda sem commit/push/deploy. Permanecem a URL estável de preview, os segredos limitados a preview e o domínio canônico sem remapeamento.
+- Próxima validação: implantar com aprovação, conferir o schema real de create_post e da mídia, adaptar somente o contrato necessário e testar leitura das contas/publicações. Nenhum teste real de publicação está autorizado.
+
+As seções seguintes são históricas e não substituem o estado acima.
+
 # Hospedagem verificada — 13/11/2026
 
 - Repositório: coffeeassessoria/fabrica-viral-gta-vi. Aplicação integrada sem force-push ao pacote editorial já existente (28addb1). Commit de integração: b3593be; a branch preview acompanha a versão de prévia.

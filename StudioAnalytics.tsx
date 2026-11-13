@@ -1,0 +1,7 @@
+import {useEffect,useState} from 'react';
+import {api} from './persistence/client';
+export default function StudioAnalytics(){
+  const [status,setStatus]=useState<string>('Conferindo a disponibilidade de métricas automáticas…');
+  useEffect(()=>{let active=true;api('integrations.capabilities',{provider:'hubpost'}).then(value=>{if(active)setStatus(value.analytics?'O HubPost anunciou uma função de analytics. A importação dos campos ainda precisa ser validada; os números abaixo continuam sendo registros manuais.':value.connected?'HubPost conectado. A sua conexão ainda não oferece consulta de métricas. Os dados abaixo são preenchidos manualmente e salvos no banco.':'Conecte o HubPost em Integrações para conferir os recursos disponíveis. Os dados abaixo são registros manuais.');}).catch(()=>{if(active)setStatus('Não foi possível conferir o HubPost. Seus registros manuais continuam disponíveis.');});return()=>{active=false;};},[]);
+  return <aside className="card p-5 mt-5" aria-label="Origem das métricas"><p className="eyebrow">ORIGEM DOS DADOS</p><p className="text-muted mt-2" role="status">{status}</p><p className="text-muted text-sm mt-3">Uma conexão direta com o TikTok pode consultar visualizações, curtidas, comentários e compartilhamentos com a autorização da conta e configuração do aplicativo. Retenção e seguidores por vídeo não devem ser estimados a partir desses campos.</p></aside>;
+}

@@ -2,7 +2,7 @@ import type {IncomingMessage,ServerResponse} from 'node:http';
 import {loadWorkspace,saveWorkspace,legacyRecords,sql,HttpError} from './database.js';
 import {session,requireSession,login,setSession,clearSession} from './security.js';
 import {mediaOperation} from './media.js';
-import {authoringQuote,generateWeek} from './authoring.js';
+import {hubpostCapabilities} from './capabilities.js';
 import {connectionsStatus,startConnection,refreshConnection,disconnect,providerName,callProvider} from './integrations.js';
 export async function readBody(req:IncomingMessage){
   const preParsed=(req as IncomingMessage&{body?:unknown}).body;
@@ -28,13 +28,13 @@ export default async function handler(req:IncomingMessage,res:ServerResponse){
     if(action==='workspace.save')return send(res,200,{data:await saveWorkspace(args.state,args.revision)});
     if(action.startsWith('records.'))return send(res,200,{data:await legacyRecords(action,args)});
     if(action==='media.operation')return send(res,200,{data:await mediaOperation(args,origin)});
-    if(action==='authoring.quote')return send(res,200,{data:await authoringQuote()});
-    if(action==='authoring.generate')return send(res,200,{data:await generateWeek(args.theme,args.confirmed)});
+    if(action==='authoring.quote'||action==='authoring.generate')throw new HttpError(410,'Os roteiros são preparados na conversa e organizados na mesa de produção.');
+    if(action==='integrations.capabilities')return send(res,200,{data:await hubpostCapabilities()});
     if(action==='integrations.status')return send(res,200,{data:await connectionsStatus()});
     if(action==='integrations.connect')return send(res,200,{data:await startConnection(providerName(args.provider),origin)});
     if(action==='integrations.refresh')return send(res,200,{data:await refreshConnection(providerName(args.provider),origin)});
     if(action==='integrations.disconnect')return send(res,200,{data:await disconnect(providerName(args.provider))});
-    if(action==='integrations.call')return send(res,200,{data:await callProvider(providerName(args.provider),String(args.operation),args.parameters as Record<string,unknown>||{},args.confirmed===true,origin)});
+    if(action==='integrations.call'){if(!['get_account','list_social_accounts','list_posts','get_post','get_analytics'].includes(String(args.operation)))throw new HttpError(400,'Use a revisão da área de postagem para enviar publicações.');return send(res,200,{data:await callProvider(providerName(args.provider),String(args.operation),args.parameters as Record<string,unknown>||{},false,origin)});}
     if(action==='jobs.list'){const jobs=await sql()`SELECT id,provider,kind,status,result,created_at FROM fv_jobs ORDER BY created_at DESC LIMIT 30`;return send(res,200,{data:jobs});}
     throw new HttpError(400,'Ação desconhecida.');
   }catch(error){const known=error instanceof HttpError;return send(res,known?error.status:500,{error:known?error.message:'Não foi possível concluir agora. Seus dados não foram substituídos. Tente novamente.'});}

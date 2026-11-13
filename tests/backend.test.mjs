@@ -27,7 +27,7 @@ test('Banco real, salvamento integral, conflito, sessão e criptografia',{timeou
     const access=await request('auth.login',{password});assert.equal(access.status,200);assert.match(access.cookie,/HttpOnly/);assert.match(access.cookie,/SameSite=Lax/);cookie=access.cookie.split(';')[0];
     assert.equal((await request('workspace.load')).data.data.state,null);
     const first=await request('workspace.save',{revision:0,state:initial});assert.equal(first.status,200);assert.equal(first.data.data.revision,1);
-    const changed=structuredClone(initial);changed.checklist[0]=true;changed.calendar[0].titulo='Título persistido';changed.metrics[0].views='1234';changed.regra='Aprendizado salvo';changed.rodarChecklist[2]=true;
+    const changed=structuredClone(initial);changed.production=[{id:'TEST-01',title:'Roteiro persistido',day:'SEG',hook:'Gancho',script:'Roteiro no banco',caption:'Legenda',hashtags:'#Teste',videoUrl:'htt',status:'Rascunho'}];changed.checklist[0]=true;changed.calendar[0].titulo='Título persistido';changed.metrics[0].views='1234';changed.regra='Aprendizado salvo';changed.rodarChecklist[2]=true;
     assert.equal((await request('workspace.save',{revision:0,state:changed})).status,409);
     const second=await request('workspace.save',{revision:1,state:changed});assert.equal(second.status,200);assert.equal(second.data.data.revision,2);
     assert.equal((await request('workspace.save',{revision:1,state:changed})).data.data.revision,2);
@@ -40,7 +40,10 @@ test('Banco real, salvamento integral, conflito, sessão e criptografia',{timeou
     const history=await sql()`SELECT state FROM fv_workspace_history WHERE workspace_id=${process.env.WORKSPACE_ID}`;assert.equal(history.length,1);assert.deepEqual(history[0].state,initial);
     const cipher=encrypt({token:'token-de-teste'});assert.ok(!cipher.includes('token-de-teste'));assert.deepEqual(decrypt(cipher),{token:'token-de-teste'});
     const tampered=Buffer.from(cipher,'base64');tampered[15]^=1;assert.throws(()=>decrypt(tampered.toString('base64')));
-    assert.equal((await request('authoring.generate',{theme:'Teste',confirmed:false})).status,400);
+    assert.equal((await request('authoring.generate',{theme:'Teste',confirmed:false})).status,410);
+    assert.equal((await request('integrations.connect',{provider:'kairogen'})).status,410);
+    assert.equal((await request('integrations.call',{provider:'hubpost',operation:'create_post',confirmed:true})).status,400);
+    assert.equal((await request('media.operation',{provider:'hubpost',operation:'create_post',confirmed:false})).status,400);
     const malformed=await fetch(origin+'/api/actions',{method:'POST',headers:{'content-type':'application/json',cookie},body:'{'});assert.equal(malformed.status,400);
     assert.equal((await request('auth.logout')).status,200);
   }finally{

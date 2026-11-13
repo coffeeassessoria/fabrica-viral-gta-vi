@@ -1,6 +1,6 @@
 # Fábrica Viral — estúdio web
 
-Painel React/Vite com acesso privado, banco Neon Postgres, salvamento automático e conexão autorizada aos provedores KAIROGEN e HubPost. A pasta canônica é `E:\PROJETOS IA\projeto-fabrica-de-monetizar\fabrica-viral-interface`.
+Painel React/Vite com acesso privado, banco Neon Postgres, salvamento automático e produção de vídeo externa pelo Claude com KAIROGEN e conexão autorizada ao HubPost. A pasta canônica é `E:\PROJETOS IA\projeto-fabrica-de-monetizar\fabrica-viral-interface`.
 
 ## O que já funciona
 
@@ -8,15 +8,20 @@ Painel React/Vite com acesso privado, banco Neon Postgres, salvamento automátic
 - Checklist, checklist de setup, calendário, métricas e regra da semana salvos juntos no banco, automaticamente após a edição.
 - Rascunho no navegador para recuperar alterações ainda não enviadas. Conflitos entre abas não sobrescrevem versões mais recentes.
 - Histórico das cem revisões anteriores de cada workspace e exportação JSON pelo botão de backup.
-- Páginas de produção de roteiros, conexões e mídia/postagem. Geração e publicação só são enviadas após confirmação no painel.
+- Mesa de produção com roteiros editáveis, importação opcional do pacote FV01–FV07, exportação Markdown para o Claude e registro dos links dos vídeos recebidos. Os roteiros também são salvos no workspace.
+- Área de distribuição com conta, vídeo, legenda, modalidade, revisão e consentimento por envio. A repetição da mesma confirmação reutiliza o ID para evitar postagem duplicada.
 
 ## Integrações: limites reais
 
-KAIROGEN e HubPost exigem autorização individual. A página Integrações inicia OAuth com PKCE; tokens ficam criptografados no banco, nunca no navegador ou no GitHub. A verificação consulta as ferramentas realmente expostas por cada conta. Recursos ausentes ou schemas ainda não suportados permanecem bloqueados, sem simular sucesso.
+O usuário definiu que os roteiros são preparados na conversa, e o Claude usa sua própria conexão KAIROGEN para gerar os vídeos. A Fábrica organiza e exporta os roteiros; não oferece conexão direta ou geração paga pela KAIROGEN.
+
+Somente o HubPost usa OAuth com PKCE nesta interface. Tokens ficam criptografados no banco, nunca no navegador ou no GitHub. Recursos ausentes ou schemas ainda não suportados permanecem bloqueados, sem simular sucesso. A lista real da conta, consultada em 13/11/2026, expõe create_post e ferramentas de mídia, mas não get_analytics. TikTok @gtavi1000grau e YouTube @fabricaviralgtavi1000grau foram encontrados nas contas conectadas. Isso não comprova publicação de vídeo nem sincronização de métricas.
 
 O HubPost informa que algumas ferramentas de escrita, mídia e analytics estão em liberação; o resultado real da conexão prevalece sobre a página comercial. Criar uma conta não autoriza o painel automaticamente. Consulte [HubPost MCP](https://hubpost.co/mcp) e [API](https://hubpost.co/docs).
 
-Roteiros pela interface usam Vercel AI Gateway. Consomem créditos de API separados das assinaturas de ChatGPT/Claude. O custo é consultado antes de cada geração; nenhum teste pago foi executado nesta preparação. Operações de vídeo e postagem dependem das funções confirmadas pelo provedor e da aprovação do usuário.
+As rotas antigas de geração pelo AI Gateway retornam 410. O histórico de trabalhos anteriores foi preservado. O pacote para o Claude exige consulta de custo e aprovação antes de qualquer geração paga. A área de métricas informa a origem manual dos registros. A consulta direta ao TikTok exigiria outro aplicativo e autorização, ainda não configurados.
+
+A publicação recebe somente argumentos compatíveis com o schema exposto pela conexão. Conta, legenda, mídia e modalidade precisam ser mapeados; campos adicionais obrigatórios ou exigência de upload sem adaptador bloqueiam o envio. Uma chamada aceita pelo HubPost não equivale à confirmação de publicação na rede; consulte o histórico. Não houve postagem real nesta preparação.
 
 ## Ambiente
 
@@ -52,10 +57,16 @@ As cinco pastas `01-ideias` a `05-metricas`, os sete roteiros e o calendário or
 
 ## Prévia hospedada
 
-Endereço verificado: https://fabrica-viral-gta-hxmsy84ir-vinicius-arenales-projects.vercel.app
+Endereço estável da branch: https://fabrica-viral-gta-vi-git-preview-vinicius-arenales-projects.vercel.app
+
+A mudança para produção externa pelo Claude e revisão de publicação está validada localmente, ainda sem commit, push ou implantação. O envio da atualização de prévia depende da confirmação prevista no AGENTS.md.
 
 O projeto está conectado ao repositório coffeeassessoria/fabrica-viral-gta-vi. Trabalhar na branch `preview` para não gerar uma publicação de produção ao atualizar `main`. Para deploy manual, usar explicitamente `vercel deploy --environment preview`; a CLI marcou o primeiro deploy sem esse argumento como produção automaticamente.
 
 O deploy explícito de prévia ficou READY. Login e leitura protegida do banco foram verificados na função hospedada. Os dois provedores retornaram autorização OAuth com PKCE S256; a autorização das contas pelo usuário ainda é necessária. Não houve geração paga nem postagem de teste.
 
 O domínio canônico não foi remapeado: a revisão automática bloqueou essa mudança de roteamento e foi usada a URL exclusiva de prévia. Há também a proteção de acesso da própria Vercel; o usuário pode precisar entrar na sua conta Vercel antes de acessar o login do estúdio.
+
+## Canal do projeto
+
+Canal criado com autorização explícita do usuário: [Fábrica Viral GTA VI 1000 Grau](https://www.youtube.com/channel/UCV92NvRghmpRW54P0zjrB2g), identificador @FabricaViralGTAVI1000Grau. Nenhum vídeo foi enviado durante a criação. Avatar, capa e descrição ainda não foram personalizados.
