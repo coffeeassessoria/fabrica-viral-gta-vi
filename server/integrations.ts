@@ -64,8 +64,8 @@ export async function refreshConnection(provider:Provider,origin:string){
 }
 export async function connectionsStatus(){return Promise.all((Object.keys(providers) as Provider[]).map(async provider=>{const value=await connection(provider);return {provider,name:providers[provider].name,connected:!!value.tokens,tools:(value.tools||[]).map(t=>t.name)};}));}
 export async function disconnect(provider:Provider){await sql()`DELETE FROM fv_connections WHERE provider=${provider}`;return {disconnected:true};}
-const readOnly={hubpost:['get_account','list_social_accounts','list_posts','get_post','get_analytics']};
-const writes={hubpost:['create_post']};
+const readOnly={hubpost:['get_account','list_social_accounts','list_posts','get_post','get_analytics','list_media']};
+const writes={hubpost:['create_post','get_upload_url','confirm_upload']};
 export async function connectionTools(provider:Provider){const value=await connection(provider);return value.tokens?value.tools||[]:[];}
 export async function callProvider(provider:Provider,operation:string,args:Record<string,unknown>,confirmed:boolean,origin:string,requestId?:string){
   const isWrite=writes[provider].includes(operation);
@@ -74,7 +74,7 @@ export async function callProvider(provider:Provider,operation:string,args:Recor
   const value=await connection(provider);
   if(!value.tools?.some(t=>t.name===operation))throw new HttpError(409,'Essa função ainda não está disponível nesta conexão. Atualize a conexão ou use o serviço diretamente.');
   const execute=()=>withClient(provider,origin,client=>client.callTool({name:operation,arguments:args},undefined,{timeout:45000}));
-  if(isWrite){if(!requestId)throw new HttpError(400,'Revise a publicação antes de confirmar.');return dispatchPublication(requestId,args,execute);}
+  if(operation==='create_post'){if(!requestId)throw new HttpError(400,'Revise a publicação antes de confirmar.');return dispatchPublication(requestId,args,execute);}
   try{return {jobId:null,result:await execute()};}
   catch{throw new HttpError(502,'Não foi possível consultar o HubPost. Verifique a conexão e tente novamente.');}
 }

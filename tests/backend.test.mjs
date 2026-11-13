@@ -38,6 +38,7 @@ test('Banco real, salvamento integral, conflito, sessão e criptografia',{timeou
     assert.equal((await request('records.list',{collection:'fabrica_checklist'})).data.data.records[0].value.items[0],true);
     assert.equal((await request('integrations.connect',{provider:'nao-permitido'})).status,400);
     const history=await sql()`SELECT state FROM fv_workspace_history WHERE workspace_id=${process.env.WORKSPACE_ID}`;assert.equal(history.length,1);assert.deepEqual(history[0].state,initial);
+    const legacy={...changed,regra:'Atualização de aba antiga'};delete legacy.production;const legacySave=await request('workspace.save',{revision:2,state:legacy});assert.equal(legacySave.status,200);assert.deepEqual(legacySave.data.data.state.production,changed.production);
     const cipher=encrypt({token:'token-de-teste'});assert.ok(!cipher.includes('token-de-teste'));assert.deepEqual(decrypt(cipher),{token:'token-de-teste'});
     const tampered=Buffer.from(cipher,'base64');tampered[15]^=1;assert.throws(()=>decrypt(tampered.toString('base64')));
     assert.equal((await request('authoring.generate',{theme:'Teste',confirmed:false})).status,410);

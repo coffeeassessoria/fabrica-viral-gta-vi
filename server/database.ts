@@ -8,6 +8,8 @@ export async function saveWorkspace(raw:unknown,revision:unknown){
   let state:Workspace;try{state=validateWorkspace(raw);}catch(e){throw new HttpError(400,(e as Error).message);}
   if(!Number.isSafeInteger(revision) || (revision as number)<0)throw new HttpError(400,'Revisão inválida.');
   const current=await loadWorkspace();
+  // Older open tabs must preserve newly introduced optional collections.
+  if(state.production===undefined&&current.state?.production!==undefined)state={...state,production:current.state.production};
   if(JSON.stringify(current.state)===JSON.stringify(state))return current;
   const rows=await sql()`INSERT INTO fv_workspace(id,revision,state,updated_at) SELECT ${workspaceId()},1,${JSON.stringify(state)}::jsonb,now() WHERE ${revision}=0 ON CONFLICT(id) DO UPDATE SET revision=fv_workspace.revision+1,state=excluded.state,updated_at=now() WHERE fv_workspace.revision=${revision} RETURNING revision,state,updated_at`;
   // An existing workspace needs an UPDATE when revision is not zero.

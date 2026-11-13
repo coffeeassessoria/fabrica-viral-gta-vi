@@ -1,6 +1,6 @@
 export type PostingMode='draft'|'schedule'|'publish';
-export type PublicationInput={accountId:string;platform?:string;caption:string;mediaUrl:string;mode:PostingMode;scheduledAt?:string};
-export type JsonSchema={type?:string|string[];enum?:unknown[];properties?:Record<string,JsonSchema>;required?:string[];items?:JsonSchema;default?:unknown;anyOf?:JsonSchema[];oneOf?:JsonSchema[];$ref?:string;$defs?:Record<string,JsonSchema>;definitions?:Record<string,JsonSchema>};
+export type PublicationInput={accountId:string;platform?:string;caption:string;mediaUrl?:string;mediaId?:string;platformOptions?:Record<string,unknown>;mode:PostingMode;scheduledAt?:string};
+export type JsonSchema={type?:string|string[];description?:string;enum?:unknown[];properties?:Record<string,JsonSchema>;required?:string[];items?:JsonSchema;default?:unknown;anyOf?:JsonSchema[];oneOf?:JsonSchema[];$ref?:string;$defs?:Record<string,JsonSchema>;definitions?:Record<string,JsonSchema>};
 export class PublicationError extends Error{constructor(public status:number,message:string){super(message);}}
 function resolved(schema:JsonSchema,root:JsonSchema):JsonSchema{
   if(schema.$ref?.startsWith('#/')){let target:any=root;for(const part of schema.$ref.slice(2).split('/'))target=target?.[part.replace(/~1/g,'/').replace(/~0/g,'~')];if(target)return resolved(target,root);}
@@ -19,13 +19,25 @@ function check(value:unknown,schema:JsonSchema,root:JsonSchema){
 }
 export function validatePublication(input:PublicationInput){
   if(!input||!['draft','schedule','publish'].includes(input.mode)||typeof input.accountId!=='string'||!input.accountId.trim()||input.accountId.length>300||typeof input.caption!=='string'||!input.caption.trim()||input.caption.length>10000)throw new PublicationError(400,'Escolha a conta e informe a legenda antes de revisar.');
-  let url:URL;try{url=new URL(input.mediaUrl);}catch{throw new PublicationError(400,'Informe o link HTTPS do vídeo final.');}
-  if(url.protocol!=='https:'||url.username||url.password)throw new PublicationError(400,'O vídeo precisa de um link HTTPS compartilhável, sem credenciais no endereço.');
+  if(!input.mediaId){let url:URL;try{url=new URL(input.mediaUrl||'');}catch{throw new PublicationError(400,'Escolha o vídeo da biblioteca do HubPost.');}
+  if(url.protocol!=='https:'||url.username||url.password)throw new PublicationError(400,'O vídeo precisa de um link HTTPS compartilhável, sem credenciais no endereço.');}
+  else if(typeof input.mediaId!=='string'||input.mediaId.length>300)throw new PublicationError(400,'Vídeo da biblioteca inválido.');
   if(input.mode==='schedule'&&(!input.scheduledAt||!Number.isFinite(Date.parse(input.scheduledAt))||Date.parse(input.scheduledAt)<Date.now()+60000))throw new PublicationError(400,'Escolha uma data futura para o agendamento.');
 }
 export function buildPublicationArguments(input:PublicationInput,rawSchema:JsonSchema){
   validatePublication(input);
   const root=rawSchema,schema=resolved(rawSchema,root),props=schema.properties||{};
+  // Contract observed from the authorized HubPost account on 2026-11-13.
+  // This version uses library media IDs and the due time controls immediate delivery.
+  if(props.accountId&&props.caption&&props.mediaIds&&props.platformOptions&&props.scheduledAt?.description?.includes('Omit to save as a draft')&&props.scheduledAt.description.includes('already due')){
+    if(!input.mediaId)throw new PublicationError(400,'Envie o vídeo ao HubPost ou escolha um vídeo da biblioteca antes de revisar.');
+    const options=platformOptions(input.platform,input.platformOptions,input.caption);
+    const args:Record<string,unknown>={accountId:input.accountId,caption:input.caption,mediaIds:[input.mediaId],platformOptions:options};
+    if(input.mode==='schedule')args.scheduledAt=input.scheduledAt;
+    // A fixed past time keeps a retry byte-for-byte identical and means "publish now" in this contract.
+    if(input.mode==='publish')args.scheduledAt='2000-01-01T00:00:00.000Z';
+    check(args,schema,root);return args;
+  }
   const args:Record<string,unknown>={};let modeMapped=false,mediaMapped=false,accountMapped=false,captionMapped=false;
   const put=(names:string[],value:unknown)=>{const key=names.find(name=>!!props[name]);if(key&&value!==undefined){args[key]=value;return key;}return undefined;};
   if(put(['account_ids','accountIds','social_account_ids','socialAccountIds'],[input.accountId]))accountMapped=true;
@@ -51,4 +63,21 @@ export function buildPublicationArguments(input:PublicationInput,rawSchema:JsonS
   if(!mediaMapped)throw new PublicationError(409,'Esta conexão do HubPost exige upload de mídia em vez de um link direto. A publicação não foi enviada; precisamos validar o recurso de upload da sua conta.');
   check(args,schema,root);
   return args;
+}
+function platformOptions(platform:string|undefined,raw:Record<string,unknown>|undefined,caption:string){
+  const p=String(platform).toUpperCase(),value=raw||{};
+  const bool=(key:string)=>{if(typeof value[key]!=='boolean')throw new PublicationError(400,'Confira as opções da plataforma antes de revisar.');return value[key];};
+  if(p==='TIKTOK'){
+    if(caption.length>2200)throw new PublicationError(400,'A legenda do TikTok pode ter até 2.200 caracteres.');
+    if(!['PUBLIC_TO_EVERYONE','MUTUAL_FOLLOW_FRIENDS','FOLLOWER_OF_CREATOR','SELF_ONLY'].includes(String(value.privacyLevel)))throw new PublicationError(400,'Escolha a privacidade do vídeo no TikTok.');
+    const result:Record<string,unknown>={privacyLevel:value.privacyLevel,allowComment:bool('allowComment'),allowDuet:bool('allowDuet'),allowStitch:bool('allowStitch'),aiGenerated:bool('aiGenerated')};
+    for(const key of ['contentDisclosure','yourBrand','brandedContent'])if(value[key]!==undefined)result[key]=bool(key);
+    return result;
+  }
+  if(p==='YOUTUBE'){
+    const categories=['autos_and_vehicles','comedy','education','entertainment','film_and_animation','gaming','howto_and_style','music','news_and_politics','nonprofits_and_activism','people_and_blogs','pets_and_animals','science_and_technology','sports','travel_and_events'];
+    if(caption.length>5000||typeof value.title!=='string'||!value.title.trim()||value.title.length>100||!Array.isArray(value.tags)||value.tags.length>100||value.tags.some(v=>typeof v!=='string'||v.length>100)||!categories.includes(String(value.category))||!['public','unlisted','private'].includes(String(value.visibility))||!['youtube','creativeCommon'].includes(String(value.license)))throw new PublicationError(400,'Confira título, legenda, tags e visibilidade do YouTube.');
+    return {title:value.title,tags:value.tags,category:value.category,visibility:value.visibility,license:value.license,madeForKids:bool('madeForKids'),notifySubscribers:bool('notifySubscribers'),allowEmbedding:bool('allowEmbedding'),aiGenerated:bool('aiGenerated')};
+  }
+  throw new PublicationError(400,'Esta versão oferece a publicação de vídeos nas contas TikTok e YouTube conectadas.');
 }

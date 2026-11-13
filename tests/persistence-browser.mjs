@@ -51,9 +51,10 @@ try{
   const sends=[];
   await page.route('**/api/actions',route=>{
     const {action,args}=route.request().postDataJSON();
-    if(action==='integrations.capabilities')return route.fulfill({json:{data:{connected:true,modes:['draft','schedule','publish'],analytics:false}}});
+    if(action==='integrations.capabilities')return route.fulfill({json:{data:{connected:true,modes:['draft','schedule','publish'],analytics:false,library:true,uploads:true}}});
     if(action==='media.operation'){
-      if(args.operation==='list_social_accounts')return route.fulfill({json:{data:{result:{structuredContent:{accounts:[{id:'fixture-social',displayName:'Destino simulado',username:'fixture',platform:'TIKTOK'}]}}}}});
+      if(args.operation==='list_social_accounts')return route.fulfill({json:{data:{result:{structuredContent:{accounts:[{accountId:'fixture-social',displayName:'Destino simulado',username:'fixture',platform:'TIKTOK'}]}}}}});
+      if(args.operation==='list_media')return route.fulfill({json:{data:{result:{structuredContent:{media:[{mediaId:'fixture-media',type:'VIDEO',filename:'video-simulado.mp4',url:'https://example.com/test-only.mp4'}]}}}}});
       if(args.operation==='create_post'){sends.push(args);if(sends.length===1)return route.fulfill({status:502,json:{error:'Não foi possível confirmar a resposta do serviço simulado.'}});return route.fulfill({json:{data:{jobId:args.requestId,result:{content:[{type:'text',text:'Resposta simulada'}]}}}});}
       throw new Error('Operação não prevista no teste: '+args.operation);
     }
@@ -66,16 +67,17 @@ try{
   await page.getByRole('button',{name:'Carregar contas do HubPost',exact:true}).click();
   await page.getByLabel('Conta de destino',{exact:true}).selectOption('fixture-social');
   await page.getByLabel('Legenda e hashtags',{exact:true}).fill('Legenda simulada para testar a revisão.');
-  await page.getByLabel('Link HTTPS do vídeo final',{exact:true}).fill('https://example.com/test-only.mp4');
+  await page.getByRole('button',{name:'Carregar vídeos do HubPost',exact:true}).click();await page.getByLabel('Vídeo da biblioteca HubPost',{exact:true}).selectOption('fixture-media');
+  await page.getByLabel('Quem pode assistir?',{exact:true}).selectOption('SELF_ONLY');await page.getByLabel('A IA criou ou alterou pessoas, vozes, lugares ou acontecimentos com aparência real?',{exact:true}).selectOption('yes');
   await page.getByLabel('O que fazer',{exact:true}).selectOption('publish');
   await page.getByRole('button',{name:'Revisar publicação',exact:true}).click();
   const confirm=page.getByRole('button',{name:'Confirmar publicação agora',exact:true});
   assert.equal(await confirm.isDisabled(),true);assert.equal(sends.length,0);
-  await page.getByRole('checkbox',{name:'Revisei conta, vídeo, legenda e horário. Autorizo este envio ao HubPost.',exact:true}).check();
+  await page.getByRole('checkbox',{name:'Revisei conta, vídeo, legenda, opções e horário. Autorizo este envio ao HubPost.',exact:true}).check();
   assert.equal(sends.length,0);await confirm.click();await confirm.waitFor({state:'visible'});
   await page.getByRole('status').filter({hasText:'Não foi possível'}).waitFor();
   await confirm.click();await page.getByRole('button',{name:'Solicitação enviada',exact:true}).waitFor();
-  assert.equal(sends.length,2);assert.equal(sends[0].requestId,sends[1].requestId);assert.equal(sends[0].mode,'publish');assert.equal(sends[0].confirmed,true);
+  assert.equal(sends.length,2);assert.equal(sends[0].requestId,sends[1].requestId);assert.equal(sends[0].mode,'publish');assert.equal(sends[0].confirmed,true);assert.equal(sends[0].mediaId,'fixture-media');assert.equal(sends[0].platformOptions.privacyLevel,'SELF_ONLY');
   assert.deepEqual((await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations,[]);
   await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   checks.push('Publicação simulada exige revisão e consentimento, preserva o ID ao repetir após falha, e não chama o HubPost real. Mesa de produção e postagem sem violações axe detectadas e sem overflow em 390px.');

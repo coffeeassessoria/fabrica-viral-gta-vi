@@ -1,3 +1,4 @@
+import {readFile} from 'node:fs/promises';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
@@ -30,6 +31,17 @@ test('Contrato de publicação e idempotência: nenhum post externo',{timeout:90
     const item={id:'test',title:'',day:'SEG',hook:'',script:'',caption:'',hashtags:'',videoUrl:'htt',status:'Rascunho'};
     assert.equal(validateProduction([item])[0].videoUrl,'htt');
     assert.throws(()=>validateProduction([item,item]),/Identificação/);
+    const actual=JSON.parse(await readFile(new URL('./fixtures/hubpost-create-post.json',import.meta.url),'utf8'));
+    const options={title:'Vídeo de teste',tags:[],category:'film_and_animation',visibility:'private',license:'youtube',madeForKids:false,notifySubscribers:false,allowEmbedding:false,aiGenerated:true};
+    const libraryInput={accountId:'test-account',caption:'Teste de contrato sem envio',mediaId:'test-media',platform:'YOUTUBE',platformOptions:options,mode:'draft'};
+    assert.deepEqual(buildPublicationArguments(libraryInput,actual),{accountId:libraryInput.accountId,caption:libraryInput.caption,mediaIds:['test-media'],platformOptions:options});
+    const immediate=buildPublicationArguments({...libraryInput,mode:'publish'},actual);assert.ok(Date.parse(immediate.scheduledAt)<Date.now());assert.equal(immediate.scheduledAt,buildPublicationArguments({...libraryInput,mode:'publish'},actual).scheduledAt);
+    assert.equal(buildPublicationArguments({...libraryInput,mode:'schedule',scheduledAt},actual).scheduledAt,scheduledAt);
+    assert.throws(()=>buildPublicationArguments({...libraryInput,mediaId:undefined,mediaUrl:'https://example.com/test.mp4'},actual),/biblioteca/);
+    assert.throws(()=>buildPublicationArguments({...libraryInput,platformOptions:{...options,madeForKids:undefined}},actual),/opções/);
+    const tiktok={privacyLevel:'SELF_ONLY',allowComment:false,allowDuet:false,allowStitch:false,aiGenerated:true};
+    assert.deepEqual(buildPublicationArguments({...libraryInput,platform:'TIKTOK',platformOptions:tiktok},actual).platformOptions,tiktok);
+    assert.throws(()=>buildPublicationArguments({...libraryInput,platform:'TIKTOK',platformOptions:{...tiktok,privacyLevel:''}},actual),/privacidade/);
     let calls=0;
     const response={content:[{type:'text',text:'Resposta simulada; nenhum post enviado.'}]};
     const send=async()=>{calls++;return response;};

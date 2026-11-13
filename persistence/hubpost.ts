@@ -1,0 +1,6 @@
+export type PostingMode='draft'|'schedule'|'publish';
+export const privacyOptions=[['PUBLIC_TO_EVERYONE','Todos'],['MUTUAL_FOLLOW_FRIENDS','Amigos mútuos'],['FOLLOWER_OF_CREATOR','Seguidores'],['SELF_ONLY','Somente eu']] as const;
+export const youtubeCategories=[['film_and_animation','Filmes e animação'],['comedy','Comédia'],['entertainment','Entretenimento'],['gaming','Jogos'],['people_and_blogs','Pessoas e blogs']] as const;
+export function providerPayload(value:any):any{const result=value?.result||value;if(result?.structuredContent)return result.structuredContent;const text=result?.content?.filter((c:any)=>c.type==='text').map((c:any)=>c.text).join('\n');if(text){try{return JSON.parse(text);}catch{return {message:text};}}return result;}
+export function providerRows(value:any):any[]{if(Array.isArray(value))return value;if(value&&typeof value==='object'){for(const key of ['accounts','social_accounts','posts','media','assets','data','results','items'])if(value[key]){const found=providerRows(value[key]);if(found.length)return found;}}return [];}
+export function assertProviderResult(value:any){if(value?.result?.isError)throw new Error('O HubPost recusou a operação. Confira a conta, o formato e o histórico no serviço antes de repetir.');return providerPayload(value);}

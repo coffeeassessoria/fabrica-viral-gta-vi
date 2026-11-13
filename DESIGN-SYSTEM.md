@@ -120,3 +120,7 @@ O sistema **must not** usar “AO VIVO”, “conectado” ou “publicado” ap
 - Repetição após falha **must** reutilizar o ID daquela revisão. Resultado incerto **must** orientar a consulta de histórico, sem confirmar publicação ou reenviar automaticamente.
 - Modalidades sem suporte confirmado **must** ficar bloqueadas com motivo. Analytics ausente **must** manter os valores como registros manuais, sem anunciar sincronização.
 - Componentes novos **must** seguir a tabela comum de estados e tokens. Os testes **must** cobrir teclado nativo, nome dos campos, ausência de overflow em celular, consentimento e restauração dos roteiros após reabrir o navegador.
+
+- A distribuição **must** distinguir envio de arquivo à biblioteca de publicação em rede. Selecionar um arquivo **must not** transmiti-lo antes do botão explícito. A confirmação final **must** mostrar o nome da mídia e todas as opções específicas da plataforma.
+- A interface **must** mapear accountId e mediaId do contrato real do HubPost. Formatos desconhecidos de upload **must** ser rejeitados antes de transmitir o arquivo. Endereços assinados **must not** aparecer em logs ou mensagens de diagnóstico.
+- Rascunho, agendamento e publicação imediata **must** seguir a semântica anunciada no schema ativo. A modalidade **must not** ser inferida somente de um botão visual.

@@ -21,7 +21,7 @@ O HubPost informa que algumas ferramentas de escrita, mídia e analytics estão 
 
 As rotas antigas de geração pelo AI Gateway retornam 410. O histórico de trabalhos anteriores foi preservado. O pacote para o Claude exige consulta de custo e aprovação antes de qualquer geração paga. A área de métricas informa a origem manual dos registros. A consulta direta ao TikTok exigiria outro aplicativo e autorização, ainda não configurados.
 
-A publicação recebe somente argumentos compatíveis com o schema exposto pela conexão. Conta, legenda, mídia e modalidade precisam ser mapeados; campos adicionais obrigatórios ou exigência de upload sem adaptador bloqueiam o envio. Uma chamada aceita pelo HubPost não equivale à confirmação de publicação na rede; consulte o histórico. Não houve postagem real nesta preparação.
+A publicação recebe somente argumentos compatíveis com o schema exposto pela conexão. Conta, legenda, mídia e modalidade precisam ser mapeados; campos adicionais obrigatórios sem adaptador bloqueiam o envio. O contrato real desta conta usa mediaIds da biblioteca. A interface consulta vídeos e oferece upload direto do arquivo para o endereço assinado pelo HubPost, seguido da confirmação da biblioteca; nenhum arquivo passa pelo disco da Vercel. Publicação imediata usa uma data já vencida, conforme descrito pelo próprio schema. Rascunho omite a data e agendamento exige data futura. As opções de TikTok/YouTube ficam explícitas na revisão. Uma chamada aceita pelo HubPost não equivale à confirmação de publicação na rede; consulte o histórico. Não houve postagem real nesta preparação.
 
 ## Ambiente
 
@@ -59,7 +59,7 @@ As cinco pastas `01-ideias` a `05-metricas`, os sete roteiros e o calendário or
 
 Endereço estável da branch: https://fabrica-viral-gta-vi-git-preview-vinicius-arenales-projects.vercel.app
 
-A mudança para produção externa pelo Claude e revisão de publicação está validada localmente, ainda sem commit, push ou implantação. O envio da atualização de prévia depende da confirmação prevista no AGENTS.md.
+O usuário aprovou commit/push e atualização somente da prévia. A primeira etapa foi enviada em a61aa31, deployment dpl_HUtr71f3ZCa4z5uwiGm8oTrCjoDU, READY. A validação da função hospedada permitiu adaptar o contrato real da mídia e postagem; confira VALIDACAO.md para o fechamento da revisão.
 
 O projeto está conectado ao repositório coffeeassessoria/fabrica-viral-gta-vi. Trabalhar na branch `preview` para não gerar uma publicação de produção ao atualizar `main`. Para deploy manual, usar explicitamente `vercel deploy --environment preview`; a CLI marcou o primeiro deploy sem esse argumento como produção automaticamente.
 
@@ -70,3 +70,5 @@ O domínio canônico não foi remapeado: a revisão automática bloqueou essa mu
 ## Canal do projeto
 
 Canal criado com autorização explícita do usuário: [Fábrica Viral GTA VI 1000 Grau](https://www.youtube.com/channel/UCV92NvRghmpRW54P0zjrB2g), identificador @FabricaViralGTAVI1000Grau. Nenhum vídeo foi enviado durante a criação. Avatar, capa e descrição ainda não foram personalizados.
+
+No HubPost, clique em Carregar contas e Carregar vídeos. Se necessário, selecione um MP4/WebM/MOV e use Enviar arquivo para o HubPost. Depois escolha conta, vídeo, legenda, opções da plataforma e modalidade. Revise e confirme. Nenhum envio é automático ao selecionar arquivo ou preencher o formulário. Upload real e publicação final precisam ser validados com um vídeo aprovado; os testes automatizados não enviam mídia real.

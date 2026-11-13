@@ -1,0 +1,59 @@
+{
+  "type": "object",
+  "properties": {
+    "accountId": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Connected account to post from. The platform is derived from it"
+    },
+    "caption": {
+      "type": "string",
+      "description": "Post caption/body. Length limits depend on the account's platform"
+    },
+    "mediaIds": {
+      "default": [],
+      "description": "mediaIds from the user's library to attach, in display order, taken from the media list or a finished upload. Some platforms require media, and some accept only images or only video",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "thumbnailMediaId": {
+      "description": "Image mediaId from the user's library to use as the cover of a single-video post. Only some platforms and post kinds accept a custom cover; the post is rejected when it doesn't, so omit it there",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "scheduledAt": {
+      "description": "ISO 8601 time to publish. Omit to save as a draft. A time already due publishes immediately",
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+    },
+    "platformOptions": {
+      "description": "Platform-specific options, must match the account's platform. FACEBOOK: { kind: \"POST\", aiGenerated? } | { kind: \"REEL\", aiGenerated? } | { kind: \"STORY\", aiGenerated? }. INSTAGRAM: { kind: \"POST\", aiGenerated?, collaborators? } | { kind: \"REEL\", aiGenerated?, collaborators?, shareToFeed?, trialReel?: \"OFF\" | \"MANUAL\" | \"AUTO\" } | { kind: \"STORY\", aiGenerated? }. X: omit or null. TIKTOK: { privacyLevel, allowComment?, allowDuet?, allowStitch?, contentDisclosure?, yourBrand?, brandedContent?, aiGenerated? }. YOUTUBE: { title, tags, category: \"autos_and_vehicles\" | \"comedy\" | \"education\" | \"entertainment\" | \"film_and_animation\" | \"gaming\" | \"howto_and_style\" | \"music\" | \"news_and_politics\" | \"nonprofits_and_activism\" | \"people_and_blogs\" | \"pets_and_animals\" | \"science_and_technology\" | \"sports\" | \"travel_and_events\", visibility: \"public\" | \"unlisted\" | \"private\", license: \"youtube\" | \"creativeCommon\", madeForKids, notifySubscribers, allowEmbedding, aiGenerated? }. THREADS: omit or null. LINKEDIN: omit or null. PINTEREST: { boardId, title?, link? }. BLUESKY: omit or null. aiGenerated: Turn on when AI made or changed this media to look real, like a real-looking person, voice, place or event. Leave off for animation, fantasy visuals, small edits like filters or color, and AI-written captions.",
+      "anyOf": [
+        {
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "accountId",
+    "caption"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

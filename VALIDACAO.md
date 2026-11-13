@@ -1,3 +1,17 @@
+# Contrato real do HubPost — 13/11/2026
+
+- Aprovação explícita recebida para commit/push e atualização somente da prévia. Etapa inicial a61aa31 hospedada em dpl_HUtr71f3ZCa4z5uwiGm8oTrCjoDU, READY, alias da branch preservado.
+- Consulta HTTPS autenticada obteve o schema real. create_post usa accountId, caption, mediaIds, platformOptions e scheduledAt. Omitir scheduledAt cria rascunho; data futura agenda; data já vencida publica imediatamente, conforme descrição do provedor. Biblioteca e upload foram adaptados a list_media, get_upload_url e confirm_upload.
+- Corrigido o mapeamento real das contas, que retorna accountId. O formulário inclui opções de TikTok e YouTube, privacidade escolhida pelo operador, título e público infantil no YouTube e indicação de mídia realista por IA. Todas as opções aparecem na revisão.
+- Upload direto usa arquivo escolhido pelo usuário, Content-Type/tamanho exatos e URL HTTPS assinada retornada pelo HubPost. O botão de upload é separado da confirmação de postagem. Limite do schema: 1 GB; MP4, WebM e QuickTime. Nenhum upload real executado nos testes.
+- O backend preserva production se uma aba antiga enviar um workspace sem o novo campo. O teste real de banco confirmou essa compatibilidade.
+- npm test: passou com fixture do schema real, três modalidades, opções obrigatórias, proteção contra repetição/concorrência e resultado incerto. Navegador real: persistência dos sete roteiros, recuperação de rascunho, seleção de biblioteca e privacidade e consentimento de publicação simulados, sem erros JavaScript, sem violações axe detectadas e sem overflow em 390px. Isso não certifica acessibilidade integral.
+- Build TypeScript/Vite: concluído; aproximadamente 347 kB JS / 108 kB gzip. Avisos de diretiva use-client do lucide são informativos.
+- get_analytics continua ausente. A área de métricas mantém registros manuais; followersCount das contas não equivale a retenção ou novos seguidores por vídeo.
+- A integração não foi validada por postagem real: nenhuma publicação, agendamento ou rascunho foi criado no HubPost durante esses testes. Falta um vídeo aprovado para o teste final de envio de mídia e publicação.
+
+As seções abaixo registram as etapas anteriores.
+
 # Fluxo Claude/KAIROGEN e HubPost — revisão local de 13/11/2026
 
 - O usuário esclareceu que a KAIROGEN será operada somente pelo Claude. A interface nova retira a conexão e geração direta e permite armazenar roteiros, importar opcionalmente os sete já preparados e exportar o pacote Markdown.
