@@ -59,7 +59,7 @@ As cinco pastas `01-ideias` a `05-metricas`, os sete roteiros e o calendário or
 
 Endereço estável da branch: https://fabrica-viral-gta-vi-git-preview-vinicius-arenales-projects.vercel.app
 
-O usuário aprovou commit/push e atualização somente da prévia. A primeira etapa foi enviada em a61aa31, deployment dpl_HUtr71f3ZCa4z5uwiGm8oTrCjoDU, READY. A validação da função hospedada permitiu adaptar o contrato real da mídia e postagem; confira VALIDACAO.md para o fechamento da revisão.
+O usuário aprovou commit/push e atualização somente da prévia. A primeira etapa foi enviada em a61aa31, deployment dpl_HUtr71f3ZCa4z5uwiGm8oTrCjoDU, READY. A adaptação final do contrato foi enviada em 81a11d6, com deploy de prévia READY. Consultas hospedadas confirmaram biblioteca, histórico e preparação de upload. Nenhum vídeo foi enviado ou publicado; confira VALIDACAO.md para evidências e limites.
 
 O projeto está conectado ao repositório coffeeassessoria/fabrica-viral-gta-vi. Trabalhar na branch `preview` para não gerar uma publicação de produção ao atualizar `main`. Para deploy manual, usar explicitamente `vercel deploy --environment preview`; a CLI marcou o primeiro deploy sem esse argumento como produção automaticamente.
 

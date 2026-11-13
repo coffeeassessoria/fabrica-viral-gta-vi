@@ -1,3 +1,11 @@
+# Fechamento da prévia — 13/11/2026
+
+- Commit 81a11d6 enviado à branch preview. Deploy https://fabrica-viral-gta-5kpuirxls-vinicius-arenales-projects.vercel.app confirmado READY. Alias estável: https://fabrica-viral-gta-vi-git-preview-vinicius-arenales-projects.vercel.app.
+- Na função HTTPS hospedada, HubPost autorizado confirmou draft, schedule e publish, biblioteca e upload disponíveis, analytics ausente. list_media e list_posts retornaram sucesso, sem mídia nem publicações cadastradas.
+- A preparação de upload foi consultada com metadados mínimos, sem transmitir arquivo nem confirmar ativo. O provedor retornou uploadUrl HTTPS e filePath no formato esperado, validando o contrato da preparação. Endereços assinados não foram exibidos nem gravados em diagnóstico.
+- O teste de encerramento teve uma colisão de variável no helper local, após as verificações concluídas; o helper foi corrigido e os dois arquivos HTTP temporários foram removidos da pasta privada. O código da aplicação não foi afetado. O registro sanitizado está em tests/artifacts/hubpost-final-verification.json, ignorado no Git.
+- Nenhum arquivo, vídeo, rascunho, agendamento ou postagem foi criado pelo teste. Permanece pendente validar upload completo e publicação real com o primeiro vídeo aprovado.
+
 # Contrato real do HubPost — 13/11/2026
 
 - Aprovação explícita recebida para commit/push e atualização somente da prévia. Etapa inicial a61aa31 hospedada em dpl_HUtr71f3ZCa4z5uwiGm8oTrCjoDU, READY, alias da branch preservado.
