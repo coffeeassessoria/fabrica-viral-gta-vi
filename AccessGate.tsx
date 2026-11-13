@@ -1,0 +1,9 @@
+import {useEffect,useState,type ReactNode} from 'react';
+import {api} from './persistence/client';
+export default function AccessGate({children}:{children:ReactNode}){
+  const [authenticated,setAuthenticated]=useState<boolean|null>(null),[password,setPassword]=useState(''),[error,setError]=useState(''),[busy,setBusy]=useState(false);
+  useEffect(()=>{api('auth.session').then(data=>setAuthenticated(data.authenticated)).catch(()=>{setAuthenticated(false);setError('Não foi possível verificar o acesso. Confira sua conexão e tente entrar.');});const expired=()=>setAuthenticated(false);window.addEventListener('fv:session-expired',expired);return()=>window.removeEventListener('fv:session-expired',expired);},[]);
+  if(authenticated===null)return <main className="access-page"><p role="status">Abrindo seu estúdio…</p></main>;
+  if(authenticated)return <>{children}</>;
+  return <main className="access-page"><section className="access-card"><span className="eyebrow">FÁBRICA VIRAL / ESTÚDIO CRIATIVO</span><h1>Suas histórias.<br/><em>Seu espaço.</em></h1><p>Entre para continuar sua produção e recuperar os dados salvos.</p><form onSubmit={async event=>{event.preventDefault();setBusy(true);setError('');try{await api('auth.login',{password});setPassword('');setAuthenticated(true);}catch(e){setError((e as Error).message);}finally{setBusy(false);}}}><label htmlFor="access-code">Código de acesso</label><input id="access-code" type="password" autoComplete="current-password" required value={password} onChange={event=>setPassword(event.target.value)} aria-describedby={error?'access-error':undefined}/><button className="primary-button" disabled={busy} aria-busy={busy}>{busy?'Entrando…':'Entrar no estúdio'}</button>{error&&<p id="access-error" role="alert">{error}</p>}</form><small>O código inicial está no arquivo de acesso privado do projeto no seu PC.</small></section></main>;
+}

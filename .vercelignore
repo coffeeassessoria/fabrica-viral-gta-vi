@@ -1,0 +1,10 @@
+node_modules
+backups
+tests/artifacts
+.env*
+.private
+.git
+preview-*.png
+qa-*.json
+*.zip
+aplicacao-local.json

@@ -1,0 +1,51 @@
+# Estado atual — banco e hospedagem de prévia
+
+Atualizado em 13/11/2026. A seção do redesign abaixo é histórica; o backend agora existe e usa Neon Postgres.
+
+- Vercel: projeto fabrica-viral-gta-vi criado no time vinicius-arenales-projects; pasta principal vinculada.
+- Neon: banco fabrica-viral-db criado no plano gratuito e conectado. Tabelas preparadas para workspace, histórico, conexões protegidas, limites de login e trabalhos.
+- Login: configuração dos três segredos aprovada pelo usuário somente para prévia. Nenhum segredo foi impresso ou enviado ao GitHub; produção/desenvolvimento não receberam esses três segredos.
+- Banco real: teste passou para salvamento integral, leitura, conflito 409, idempotência de mesma versão, validação 400, origem indevida 403, sessão 401, histórico e criptografia autenticada. Registros de teste isolados foram removidos.
+- Navegador real: checklist, calendário, métricas, regra e checklist de setup voltaram após fechar todo o navegador e reiniciar o servidor. Rascunho de edição interrompida foi recuperado e enviado ao banco. Sem erros JavaScript nesse fluxo.
+- Build: análise TypeScript e bundle concluídos; aproximadamente 338 kB JS / 102 kB gzip antes de novas revisões. O aviso use-client do lucide-react permanece informativo.
+- Integrações: código OAuth/PKCE preparado com metadados públicos confirmados. Autorizações das contas, funções disponíveis e fluxos de geração/postagem ainda não validados com as contas reais. Não chamar de integração concluída antes dessa verificação.
+- Geração de texto: implementação de API com consulta de preço e consentimento; nenhuma geração paga foi executada.
+- GitHub: primeiro commit/push ainda não executado. Publicação de prévia será registrada após confirmação do deploy e teste do endereço.
+
+Os testes usaram credenciais temporárias somente em memória e WORKSPACE_ID separado. Não alteraram o workspace principal, conexões reais ou conteúdo das redes sociais.
+
+# Validação e entrega — 13/11/2026
+
+## Resultado
+
+Redesign implementado para as oito áreas da Fábrica Viral. Arquivos de interface: `App.tsx` e `index.css`. Mantidos o endpoint relativo `actions`, nomes de coleções, modelo de dados e ações de checklist, calendário, métricas e cronômetro.
+
+Aplicado à pasta original indicada pelo usuário em 13/11/2026. O backup dos dois arquivos originais foi criado antes da substituição; os hashes dos três arquivos entregues foram comparados após a cópia. Destino e backup estão registrados em `aplicacao-local.json`. Nenhum commit, push ou deploy foi executado.
+
+O conteúdo editorial preexistente foi preservado. Removida apenas uma afirmação não verificada sobre preço pessoal de assinatura. O exemplo de MCP foi identificado como não validado. A nova visão geral não apresenta resultados fictícios como se fossem métricas reais.
+
+## Evidências executadas
+
+- `npm run build`: análise TypeScript e bundle Vite concluídos. Bundle JS de aproximadamente 319 kB / 96 kB gzip e CSS de aproximadamente 36 kB / 8 kB gzip, sem fontes externas incluídas nesses tamanhos. O bundler informa aviso sobre diretiva `use client` do lucide-react; não é erro de compilação e esta prévia é uma aplicação cliente.
+- Navegador: Microsoft Edge headless com Playwright, 1440×1100 e 390×844; redução de movimento ativada.
+- Axe: oito áreas no desktop e oito no celular, tags WCAG 2 A/AA, 2.1 AA e 2.2 AA; zero violações detectadas. Isso não constitui certificação WCAG integral.
+- Onze verificações de fluxo concluídas, sem erros JavaScript no navegador. Evidência estruturada em `qa-browser.json`.
+- Sorteio de dez ideias, cópia real para clipboard, checklist e restauração após recarga, calendário com título longo/status, métricas atualizando o resumo, cronômetro iniciando/pausando/reiniciando.
+- Link de salto por teclado; navegação para título; menu móvel com foco contido, Escape e retorno de foco; oito áreas sem overflow horizontal global em 320px/390px; texto ampliado a 200% nas oito áreas; tipografia fallback na visão geral.
+- API simulada exercitou listagem, criação, substituição e falha HTTP 503. Não houve gravação em serviço real, postagem ou geração audiovisual.
+- Capturas `preview-desktop.png` e `preview-mobile.png` mostram dados iniciais de demonstração com serviço simulado; não são prova de conexão com o sistema proprietário.
+
+## Limites
+
+O material original contém somente os componentes e o CSS; não inclui implementação do backend, credenciais ou configuração de autenticação. Leitura e salvamento reais precisam de validação no host original. A prévia local informa indisponibilidade quando esse endpoint não existe.
+
+ArtDecoMedium não foi fornecida; fallback Bebas Neue/Impact. As fontes Google precisam de conexão; o fallback de sistema foi exercitado. Não foi realizada sessão manual com leitor de tela, publicação nem teste das integrações mencionadas no conteúdo legado.
+
+O contrato de salvamento original usa quatro operações separadas; não é transacional. A alteração visual não modifica essa propriedade. Os testes usaram fixtures efêmeras e não alteraram dados ou contas reais.
+
+## Retomada
+
+Confira a pasta original e o backup antes de novas alterações. Use `README.md` para executar a cópia de revisão e `DESIGN-SYSTEM.md` como fonte de tokens e comportamento. Uma publicação deve ocorrer somente após autorização explícita do usuário e conferência da API real no ambiente de destino.
+
+## Pasta principal atual
+Em 13/11/2026, a pedido do usuário, a interface canônica foi consolidada em fabrica-viral-interface dentro de E:\PROJETOS IA\projeto-fabrica-de-monetizar. Dependências instaladas nessa pasta e npm run build concluído novamente. Arquivos preexistentes preservados em backups/antes-consolidacao-20261113-160536. A pasta outputs da conversa é somente uma cópia histórica.

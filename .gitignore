@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.vercel/
+.env
+.env.*
+!.env.example
+backups/
+.private/
+ACESSO*
+*.log
+qa-*.json
+preview-*.png
+aplicacao-local.json
+tests/artifacts/
