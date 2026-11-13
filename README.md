@@ -49,3 +49,13 @@ Se aparecer “rascunho preservado”, não limpe os dados do navegador antes de
 ## Pacote editorial preservado
 
 As cinco pastas `01-ideias` a `05-metricas`, os sete roteiros e o calendário originais foram preservados do commit 28addb1. Consulte [PACOTE-EDITORIAL.md](PACOTE-EDITORIAL.md) para o registro dessa entrega. A publicação da aplicação não equivale à aprovação ou postagem das histórias.
+
+## Prévia hospedada
+
+Endereço verificado: https://fabrica-viral-gta-hxmsy84ir-vinicius-arenales-projects.vercel.app
+
+O projeto está conectado ao repositório coffeeassessoria/fabrica-viral-gta-vi. Trabalhar na branch `preview` para não gerar uma publicação de produção ao atualizar `main`. Para deploy manual, usar explicitamente `vercel deploy --environment preview`; a CLI marcou o primeiro deploy sem esse argumento como produção automaticamente.
+
+O deploy explícito de prévia ficou READY. Login e leitura protegida do banco foram verificados na função hospedada. Os dois provedores retornaram autorização OAuth com PKCE S256; a autorização das contas pelo usuário ainda é necessária. Não houve geração paga nem postagem de teste.
+
+O domínio canônico não foi remapeado: a revisão automática bloqueou essa mudança de roteamento e foi usada a URL exclusiva de prévia. Há também a proteção de acesso da própria Vercel; o usuário pode precisar entrar na sua conta Vercel antes de acessar o login do estúdio.

@@ -1,3 +1,13 @@
+# Hospedagem verificada — 13/11/2026
+
+- Repositório: coffeeassessoria/fabrica-viral-gta-vi. Aplicação integrada sem force-push ao pacote editorial já existente (28addb1). Commit de integração: b3593be; a branch preview acompanha a versão de prévia.
+- Projeto Vercel vinculado ao GitHub. Deploy de prévia dpl_3z3CZPKHijXqhMNmAtsL5SbRRqYW: READY, URL https://fabrica-viral-gta-hxmsy84ir-vinicius-arenales-projects.vercel.app.
+- Verificação HTTPS real: sessão anônima não autenticada, leitura do workspace negada sem login, login com código privado concluído e leitura do banco confirmada. Nenhum registro principal foi alterado nessa verificação.
+- Início OAuth real retornou consentimento em app.kairogen.ai e hubpost.co com PKCE S256. Isso valida início do fluxo, não autorização da conta, refresh, geração ou postagem.
+- Sessão/código/cookies não foram exibidos. Arquivos temporários de teste HTTP foram removidos. Vercel curl criou uma credencial de bypass de automação do próprio projeto para o teste autenticado; seu valor não foi exibido nem commitado.
+- Ocorrência de implantação: a CLI marcou o primeiro deploy sem ambiente explícito como produção. As credenciais de acesso nunca foram enviadas à produção; foi criado em seguida o deploy preview explícito. O primeiro deploy permanece como artefato histórico com login da aplicação indisponível, protegido pela Vercel. O domínio canônico não foi alterado; a revisão automática bloqueou a proposta de remapeá-lo.
+- Atualizações seguintes devem usar preview. Não promover produção nem distribuir credenciais entre ambientes sem escopo autorizado.
+
 # Estado atual — banco e hospedagem de prévia
 
 Atualizado em 13/11/2026. A seção do redesign abaixo é histórica; o backend agora existe e usa Neon Postgres.

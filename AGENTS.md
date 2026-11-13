@@ -18,3 +18,5 @@
 - Não inventar métricas, desempenho, aprovações, orçamentos ou capacidades de serviços. Separar roteiros/prompt preparados de vídeos realmente gerados.
 - Manter IDs FV01–FV07 alinhados entre catálogo, roteiros, calendário e métricas. Não declarar resultado de votação sem apuração real.
 - Aprovação editorial é diferente de autorização para postagem. Nenhuma integração autoriza postagem por conta própria.
+
+- Branch de trabalho para esta fase: `preview`. Deploy manual deve incluir `--environment preview`; não depender do padrão da primeira implantação da CLI. O domínio canônico não foi remapeado.
