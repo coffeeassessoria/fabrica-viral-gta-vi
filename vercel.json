@@ -3,9 +3,6 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "functions": {
-    "api/*.ts": {
-      "maxDuration": 60
-    },
     "api/production-worker.ts": {
       "maxDuration": 60,
       "experimentalTriggers": [
@@ -14,6 +11,9 @@
           "topic": "fabrica-production"
         }
       ]
+    },
+    "api/*.ts": {
+      "maxDuration": 60
     }
   },
   "rewrites": [
