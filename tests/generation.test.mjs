@@ -11,12 +11,12 @@ test('Aprovação, orçamento, concorrência e recuperação da geração sem cu
  const {generationResult,credits,contract}=await vite.ssrLoadModule('/server/kairogen-contract.ts');
  const db=sql();for(const statement of generationSchema)await db.query(statement,[]);
  // Synthetic fixture, not a claim about the authenticated KAIROGEN contract.
- const props={model:{type:'string',enum:['test-video']},prompt:{type:'string'},duration:{type:'integer',enum:[5]},wait_for_completion:{type:'boolean'}};
- const tools=[{name:'generate_video',inputSchema:{type:'object',properties:props,required:Object.keys(props)}},{name:'estimate_cost',inputSchema:{type:'object',properties:{model:props.model,duration:props.duration},required:['model','duration']}},{name:'get_generation',inputSchema:{type:'object',properties:{generation_id:{type:'string'}},required:['generation_id']}}];
+ const props={model:{type:'string',enum:['test-video']},prompt:{type:'string'},duration:{type:'integer',enum:[5]},wait_for_completion:{type:'boolean'},expected_credits:{type:'integer',minimum:0}};
+ const tools=[{name:'generate_video',inputSchema:{type:'object',properties:props,required:Object.keys(props).filter(k=>k!=='expected_credits')}},{name:'estimate_cost',inputSchema:{type:'object',properties:{model:props.model,duration:props.duration},required:['model','duration']}},{name:'get_generation',inputSchema:{type:'object',properties:{generation_id:{type:'string'}},required:['generation_id']}}];
  let price=7,sends=0,fail=false;
  const deps={tools:async()=>tools,call:async(name,args)=>{
   if(name==='estimate_cost')return {structuredContent:{credits:price}};
-  if(name==='generate_video'){sends++;assert.equal(args.wait_for_completion,false);if(fail)throw new Error('uncertain timeout');return {structuredContent:{generation_id:'fixture-generation',status:'processing'}};}
+  if(name==='generate_video'){sends++;assert.equal(args.wait_for_completion,false);assert.equal(args.expected_credits,price);if(fail)throw new Error('uncertain timeout');return {structuredContent:{generation_id:'fixture-generation',status:'processing'}};}
   if(name==='get_generation')return {structuredContent:{generation_id:args.generation_id,status:'completed',video_url:'https://example.com/fixture.mp4'}};
   throw new Error('Unexpected call');
  }};

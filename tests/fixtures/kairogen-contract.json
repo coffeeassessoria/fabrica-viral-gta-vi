@@ -1,0 +1,759 @@
+{
+  "source": "Schemas and model metadata read from authenticated KAIROGEN MCP on 2026-11-13. No tokens, account data, or real prices.",
+  "tools": [
+    {
+      "name": "list_models",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "image",
+              "video"
+            ]
+          },
+          "search": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "get_credits",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "estimate_cost",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quantity": {
+            "type": "integer",
+            "exclusiveMinimum": 0
+          },
+          "duration_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "aspect_ratio": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resolution": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quality": {
+            "type": "string",
+            "minLength": 1
+          },
+          "size": {
+            "type": "string",
+            "minLength": 1
+          },
+          "turbo": {
+            "type": "boolean"
+          },
+          "generate_audio": {
+            "type": "boolean"
+          },
+          "sound": {
+            "type": "boolean"
+          },
+          "reference_image_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2048,
+              "format": "uri"
+            },
+            "maxItems": 30
+          },
+          "first_frame_url": {
+            "type": "string",
+            "maxLength": 2048,
+            "format": "uri"
+          },
+          "last_frame_url": {
+            "type": "string",
+            "maxLength": 2048,
+            "format": "uri"
+          },
+          "reference_video_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2048,
+              "format": "uri"
+            },
+            "maxItems": 30
+          },
+          "reference_audio_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2048,
+              "format": "uri"
+            },
+            "maxItems": 30
+          },
+          "extra_params": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "preset_run_id": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{32}$"
+          },
+          "plan_key": {
+            "type": "string",
+            "enum": [
+              "free",
+              "start",
+              "essential",
+              "pro",
+              "precision",
+              "precisionPlus",
+              "precisionMax",
+              "creator"
+            ]
+          }
+        },
+        "required": [
+          "model",
+          "plan_key"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "get_generation",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "generation_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "wait_for_completion": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "generation_id"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    },
+    {
+      "name": "generate_video",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "duration_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "aspect_ratio": {
+            "type": "string"
+          },
+          "resolution": {
+            "type": "string",
+            "minLength": 1
+          },
+          "quality": {
+            "type": "string",
+            "minLength": 1
+          },
+          "turbo": {
+            "type": "boolean"
+          },
+          "generate_audio": {
+            "type": "boolean"
+          },
+          "first_frame_url": {
+            "type": "string",
+            "maxLength": 2048,
+            "format": "uri"
+          },
+          "last_frame_url": {
+            "type": "string",
+            "maxLength": 2048,
+            "format": "uri"
+          },
+          "reference_image_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2048,
+              "format": "uri"
+            }
+          },
+          "character_id": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{24}$"
+          },
+          "preset_run_id": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{32}$"
+          },
+          "reference_video_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2048,
+              "format": "uri"
+            }
+          },
+          "reference_audio_urls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2048,
+              "format": "uri"
+            }
+          },
+          "quantity": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 2
+          },
+          "seed": {
+            "type": "integer"
+          },
+          "extra_params": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "expected_credits": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "wait_for_completion": {
+            "type": "boolean"
+          },
+          "timeout_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 1800
+          },
+          "replay_of": {
+            "type": "string",
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "model",
+          "prompt"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      }
+    }
+  ],
+  "catalog": {
+    "models": [
+      {
+        "model_key": "kling-video-o1-edit-image-to-video",
+        "name": "Kling Video O1 Edit",
+        "type": "video",
+        "provider": "Kling",
+        "default_mode": null,
+        "modes": null,
+        "reference_inputs": [
+          {
+            "param_key": "video",
+            "role": "reference_video",
+            "media": "video",
+            "label": "Vídeo de Referência",
+            "max_files": 1,
+            "required": true,
+            "modes": null
+          },
+          {
+            "param_key": "images",
+            "role": "first_frame",
+            "media": "image",
+            "label": "Imagens de Referência",
+            "max_files": 4,
+            "required": false,
+            "modes": null
+          }
+        ],
+        "supported_durations": null,
+        "param_schema": [
+          {
+            "key": "video",
+            "type": "file",
+            "label": "Vídeo de Referência",
+            "required": true,
+            "group": "basic",
+            "show": true,
+            "maxFiles": 1
+          },
+          {
+            "key": "images",
+            "type": "file",
+            "label": "Imagens de Referência",
+            "required": false,
+            "group": "basic",
+            "show": true,
+            "maxFiles": 4
+          },
+          {
+            "key": "keep_original_sound",
+            "type": "boolean",
+            "label": "Manter áudio original",
+            "required": false,
+            "default": true,
+            "group": "basic"
+          }
+        ],
+        "extra": {
+          "maxReferenceImages": 4,
+          "promptRequired": true
+        }
+      },
+      {
+        "model_key": "wan-2-7",
+        "name": "Wan 2.7",
+        "type": "video",
+        "provider": "Wan",
+        "default_mode": "base",
+        "modes": {
+          "base": {
+            "label": "Texto",
+            "resolved_mode": "text-to-video",
+            "required_inputs": [],
+            "reference_field_keys": [],
+            "auto_switch_on_reference": false
+          },
+          "image-to-video": {
+            "label": "Imagem",
+            "resolved_mode": "image-to-video",
+            "required_inputs": [],
+            "reference_field_keys": [
+              "first_frame",
+              "last_frame"
+            ],
+            "auto_switch_on_reference": true
+          }
+        },
+        "reference_inputs": [
+          {
+            "param_key": "first_frame",
+            "role": "first_frame",
+            "media": "image",
+            "label": "First Frame (opcional)",
+            "max_files": 1,
+            "required": false,
+            "modes": [
+              "image-to-video"
+            ]
+          },
+          {
+            "param_key": "last_frame",
+            "role": "last_frame",
+            "media": "image",
+            "label": "Last Frame (opcional)",
+            "max_files": 1,
+            "required": false,
+            "modes": [
+              "image-to-video"
+            ]
+          },
+          {
+            "param_key": "audio",
+            "role": "reference_image",
+            "media": "image",
+            "label": "Áudio de referência (opcional)",
+            "max_files": 1,
+            "required": false,
+            "modes": null
+          }
+        ],
+        "supported_durations": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "param_schema": [
+          {
+            "key": "first_frame",
+            "type": "file",
+            "label": "First Frame (opcional)",
+            "required": false,
+            "group": "basic",
+            "show": true,
+            "maxFiles": 1,
+            "modes": [
+              "image-to-video"
+            ]
+          },
+          {
+            "key": "last_frame",
+            "type": "file",
+            "label": "Last Frame (opcional)",
+            "required": false,
+            "group": "basic",
+            "show": true,
+            "maxFiles": 1,
+            "modes": [
+              "image-to-video"
+            ]
+          },
+          {
+            "key": "aspect_ratio",
+            "type": "select",
+            "label": "Proporção",
+            "required": false,
+            "default": "16:9",
+            "options": [
+              {
+                "value": "16:9",
+                "label": "16:9"
+              },
+              {
+                "value": "9:16",
+                "label": "9:16"
+              },
+              {
+                "value": "1:1",
+                "label": "1:1"
+              },
+              {
+                "value": "4:3",
+                "label": "4:3"
+              },
+              {
+                "value": "3:4",
+                "label": "3:4"
+              }
+            ],
+            "group": "basic",
+            "modes": [
+              "base"
+            ]
+          },
+          {
+            "key": "resolution",
+            "type": "select",
+            "label": "Resolução",
+            "required": false,
+            "default": "720p",
+            "options": [
+              {
+                "value": "720p",
+                "label": "720p"
+              },
+              {
+                "value": "1080p",
+                "label": "1080p"
+              }
+            ],
+            "group": "basic"
+          },
+          {
+            "key": "duration",
+            "type": "select",
+            "label": "Duração (s)",
+            "required": false,
+            "default": 5,
+            "options": [
+              {
+                "value": 2,
+                "label": "2s"
+              },
+              {
+                "value": 3,
+                "label": "3s"
+              },
+              {
+                "value": 4,
+                "label": "4s"
+              },
+              {
+                "value": 5,
+                "label": "5s"
+              },
+              {
+                "value": 6,
+                "label": "6s"
+              },
+              {
+                "value": 7,
+                "label": "7s"
+              },
+              {
+                "value": 8,
+                "label": "8s"
+              },
+              {
+                "value": 9,
+                "label": "9s"
+              },
+              {
+                "value": 10,
+                "label": "10s"
+              },
+              {
+                "value": 11,
+                "label": "11s"
+              },
+              {
+                "value": 12,
+                "label": "12s"
+              },
+              {
+                "value": 13,
+                "label": "13s"
+              },
+              {
+                "value": 14,
+                "label": "14s"
+              },
+              {
+                "value": 15,
+                "label": "15s"
+              }
+            ],
+            "group": "basic"
+          },
+          {
+            "key": "enable_prompt_expansion",
+            "type": "boolean",
+            "label": "Expandir prompt",
+            "required": false,
+            "default": false,
+            "group": "basic"
+          },
+          {
+            "key": "audio",
+            "type": "file",
+            "label": "Áudio de referência (opcional)",
+            "required": false,
+            "group": "advanced",
+            "maxFiles": 1
+          }
+        ],
+        "extra": {
+          "maxReferenceImages": 1,
+          "promptRequired": true,
+          "supportedAspectRatios": [
+            "16:9",
+            "9:16",
+            "1:1",
+            "4:3",
+            "3:4"
+          ],
+          "supportedResolutions": [
+            "720p",
+            "1080p"
+          ]
+        }
+      },
+      {
+        "model_key": "veo3-1-lite",
+        "name": "Veo3.1 Lite",
+        "type": "video",
+        "provider": "Google",
+        "default_mode": "base",
+        "modes": {
+          "base": {
+            "label": "Texto",
+            "resolved_mode": "text-to-video",
+            "required_inputs": [],
+            "reference_field_keys": [],
+            "auto_switch_on_reference": false
+          },
+          "image-to-video": {
+            "label": "Imagem",
+            "resolved_mode": "image-to-video",
+            "required_inputs": [
+              "image"
+            ],
+            "reference_field_keys": [
+              "image"
+            ],
+            "auto_switch_on_reference": true
+          },
+          "start-end-to-video": {
+            "label": "Start End To Video",
+            "resolved_mode": "image-to-video",
+            "required_inputs": [
+              "image"
+            ],
+            "reference_field_keys": [],
+            "auto_switch_on_reference": false
+          }
+        },
+        "reference_inputs": [
+          {
+            "param_key": "image",
+            "role": "first_frame",
+            "media": "image",
+            "label": "First Frame",
+            "max_files": 1,
+            "required": false,
+            "modes": [
+              "image-to-video"
+            ]
+          }
+        ],
+        "supported_durations": [
+          8,
+          6,
+          4
+        ],
+        "param_schema": [
+          {
+            "key": "_studio_mode",
+            "type": "select",
+            "label": "Variante",
+            "required": false,
+            "default": "base",
+            "options": [
+              {
+                "value": "base",
+                "label": "Texto",
+                "show": true
+              },
+              {
+                "value": "start-end-to-video",
+                "label": "Start End To Video",
+                "show": true
+              }
+            ],
+            "group": "advanced-panel",
+            "show": true
+          },
+          {
+            "key": "aspect_ratio",
+            "type": "select",
+            "label": "Proporção",
+            "required": false,
+            "show": true,
+            "default": "16:9",
+            "options": [
+              {
+                "value": "16:9",
+                "label": "16:9",
+                "show": true
+              },
+              {
+                "value": "9:16",
+                "label": "9:16",
+                "show": true
+              }
+            ]
+          },
+          {
+            "key": "duration",
+            "type": "select",
+            "label": "Duração",
+            "required": false,
+            "show": true,
+            "default": 6,
+            "options": [
+              {
+                "value": 8,
+                "label": "8",
+                "show": true
+              },
+              {
+                "value": 6,
+                "label": "6",
+                "show": true
+              },
+              {
+                "value": 4,
+                "label": "4",
+                "show": true
+              }
+            ]
+          },
+          {
+            "key": "negative_prompt",
+            "type": "text",
+            "label": "Negative Prompt",
+            "required": false,
+            "show": true
+          },
+          {
+            "key": "resolution",
+            "type": "select",
+            "label": "Resolução",
+            "required": false,
+            "show": true,
+            "default": "720p",
+            "options": [
+              {
+                "value": "720p",
+                "label": "720p",
+                "show": true
+              },
+              {
+                "value": "1080p",
+                "label": "1080p",
+                "show": true
+              }
+            ]
+          },
+          {
+            "key": "seed",
+            "type": "number",
+            "label": "Seed",
+            "required": false,
+            "show": true
+          },
+          {
+            "key": "image",
+            "type": "file",
+            "label": "First Frame",
+            "required": false,
+            "maxFiles": 1,
+            "modes": [
+              "image-to-video"
+            ],
+            "show": true
+          }
+        ],
+        "extra": {
+          "promptRequired": true
+        }
+      }
+    ]
+  }
+}

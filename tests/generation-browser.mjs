@@ -1,6 +1,6 @@
 import {createRequire} from 'node:module';
 import {randomUUID,randomBytes,scryptSync} from 'node:crypto';
-import {mkdir,writeFile} from 'node:fs/promises';
+import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {createServer} from 'vite';
 import AxeBuilder from '@axe-core/playwright';
@@ -10,8 +10,15 @@ process.env.WORKSPACE_ID='generation-browser-'+randomUUID();
 process.env.SESSION_SECRET=randomBytes(48).toString('hex');process.env.TOKEN_ENCRYPTION_KEY=randomBytes(32).toString('base64');
 const password=randomBytes(24).toString('hex'),salt=randomBytes(24).toString('hex');process.env.ADMIN_PASSWORD_HASH=`${salt}:${scryptSync(password,salt,64).toString('hex')}`;
 let sends=0;const errors=[];let browser;
-const tools=[{name:'generate_video',inputSchema:{type:'object',properties:{model:{type:'string',enum:['Modelo simulado']},prompt:{type:'string'},duration:{type:'integer',enum:[5]},wait_for_completion:{type:'boolean'}},required:['model','prompt','duration','wait_for_completion']}},{name:'estimate_cost',inputSchema:{type:'object',properties:{model:{type:'string'},duration:{type:'integer'}},required:['model','duration']}},{name:'get_generation',inputSchema:{type:'object',properties:{generation_id:{type:'string'}},required:['generation_id']}}];
-const deps={tools:async()=>tools,call:async(name)=>{if(name==='estimate_cost')return {structuredContent:{credits:7}};if(name==='generate_video'){sends++;return {structuredContent:{generation_id:'test-result',status:'processing'}};}return {structuredContent:{generation_id:'test-result',status:'completed',video_url:'https://example.com/test-only-video.mp4'}};}};
+const fixture=JSON.parse(await readFile('tests/fixtures/kairogen-contract.json','utf8'));
+const tools=fixture.tools;
+const deps={tools:async()=>tools,call:async(name,args)=>{
+ if(name==='list_models')return {structuredContent:fixture.catalog};
+ if(name==='get_credits')return {structuredContent:{credits_remaining:100}};
+ if(name==='estimate_cost'){assert.equal(args.plan_key,'pro');return {structuredContent:{credit_cost:7}};}
+ if(name==='generate_video'){sends++;assert.equal(args.expected_credits,7);assert.equal(args.quantity,1);return {structuredContent:{generation_id:'test-result',status:'processing'}};}
+ return {structuredContent:{generation_id:'test-result',status:'completed',video_url:'https://example.com/test-only-video.mp4'}};
+}};
 const vite=await createServer({configFile:false,root:process.cwd(),server:{host:'127.0.0.1',port:4188,strictPort:true,hmr:false,watch:{ignored:['**/tests/artifacts/**']}},plugins:[{name:'test-generation-only',configureServer(server){server.middlewares.use(async(req,res,next)=>{
  if(req.url?.split('?')[0]!=='/api/actions')return next();
  const {readBody,send,default:handler}=await server.ssrLoadModule('/server/actions.ts');
@@ -33,7 +40,7 @@ try{
  assert.equal(await page.getByRole('button',{name:'Preparar cena',exact:true}).isDisabled(),true);
  await page.getByRole('button',{name:'Aprovar esta versão do roteiro',exact:true}).click();await page.getByText('Versão atual aprovada para preparar cenas.',{exact:true}).waitFor();
  await page.getByRole('button',{name:'Preparar cena',exact:true}).click();
- await page.getByLabel('Modelo de vídeo *',{exact:true}).selectOption('Modelo simulado');await page.getByLabel('Duração *',{exact:true}).selectOption('5');await page.getByLabel('Descrição da cena *',{exact:true}).fill('Recepcionista encontra uma chave sobre o balcão.');
+ await page.getByLabel('Modelo de vídeo *',{exact:true}).selectOption('wan-2-7');await page.getByLabel('Plano da sua conta KAIROGEN',{exact:true}).selectOption('pro');await page.getByLabel('Duração em segundos *',{exact:true}).selectOption('5');await page.getByLabel('Descrição da cena *',{exact:true}).fill('Recepcionista encontra uma chave sobre o balcão.');
  await page.getByRole('button',{name:'Consultar custo desta cena',exact:true}).click();
  const generate=page.getByRole('button',{name:'Confirmar custo e gerar cena',exact:true});await generate.waitFor();assert.equal(await generate.isDisabled(),true);assert.equal(sends,0);
  await page.getByRole('checkbox',{name:'Aprovo esta cena e o custo de 7 créditos. Autorizo um envio à KAIROGEN.',exact:true}).check();assert.equal(sends,0);

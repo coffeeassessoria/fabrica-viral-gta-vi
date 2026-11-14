@@ -136,3 +136,11 @@ Consulte [estado e limites da integração direta](docs/KAIROGEN-DIRETO.md). As 
 
 - Usuário autorizou explicitamente commit, push na branch preview e publicação da integração direta no endereço curto atual. Build e três testes npm test reexecutados e aprovados; provedor simulado, sem geração paga.
 - O domínio curto está vinculado a preview. A publicação preserva segredos apenas nesse ambiente. Ainda será necessária autorização OAuth da conta e validação das ferramentas reais antes de gerar.
+
+
+## KAIROGEN — adaptação ao contrato autenticado (13/11/2026)
+
+- Conexão existente confirmada; catálogo real e saldo consultados sem geração. Modelos compatíveis de texto passam a ter formulário próprio. Cotação exige seleção explícita do plano porque a consulta automática de assinatura foi recusada.
+- Backend aceita credit_cost, preserva parâmetros de preço e envia expected_credits ao gerar. Roteiro e custo continuam sujeitos à aprovação; nenhuma aprovação real foi inventada.
+- Build, quatro testes e navegador com schemas reais/respostas simuladas aprovados; zero violações Axe no fluxo, 390px sem overflow. Primeiro custo/vídeo real ainda dependem da revisão do usuário.
+- A atualização inicial foi publicada em dpl_6PTNmNSg32KmvELdX7vVqbSKN3pd; os ajustes posteriores seguem na mesma branch preview. Detalhes e limites atuais em docs/KAIROGEN-DIRETO.md.

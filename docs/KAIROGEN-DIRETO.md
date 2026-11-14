@@ -1,50 +1,44 @@
-# KAIROGEN direto — implementação local
+# KAIROGEN direto — integração na prévia
 
-Status em 13/11/2026: código preparado e testes simulados aprovados; publicação de prévia e validação autenticada pendentes. Nenhuma geração real executada.
+Atualização em 13/11/2026. Publicação autorizada pelo usuário na branch preview. Endereço: https://fabrica-viral-gta-vi.vercel.app . Nenhuma geração paga foi executada nesta implantação.
 
-## Decisão
+## Fluxo
 
-Integração direta do backend com o MCP da KAIROGEN, autorizada por Vinícius. Claude API não é necessário para enviar uma cena já preparada; não foi ativado serviço adicional faturado. A conta autoriza OAuth com PKCE, tokens criptografados e permissões de leitura/geração. Conectar não autoriza gasto.
+1. Salvar e aprovar uma versão do roteiro na Mesa de produção.
+2. Preparar uma cena, selecionar um modelo do catálogo real e seu plano atual KAIROGEN.
+3. Conferir duração, formato e opções do modelo; consultar o custo em créditos.
+4. Revisar os parâmetros e o custo, marcar consentimento e confirmar um envio.
+5. Acompanhar o processamento e o resultado no player do painel. Associar o vídeo ao roteiro quando estiver pronto.
 
-## Fluxo implementado
+A versão atual oferece geração a partir de texto. Modelos que exigem arquivos de referência ficam fora da seleção; envio de imagens, edição de vídeo e montagem automática do episódio não fazem parte desta etapa. Cada confirmação gera um take, quantidade 1. Não requer assinatura ou API do Claude.
 
-1. Editar e salvar o roteiro na Mesa de produção.
-2. Selecionar o roteiro no painel de geração e aprovar a versão exata. Etapas antigas como Roteiro pronto não equivalem a esta aprovação.
-3. Preparar uma cena e consultar custo em créditos.
-4. Revisar parâmetros, custo e validade de dez minutos; marcar consentimento e confirmar.
-5. O servidor confere novamente aprovação, contrato e custo antes de reservar o envio. Mudança exige nova revisão.
-6. A KAIROGEN processa o trabalho aceito. O painel consulta trabalhos em andamento a cada 15 segundos enquanto visível e permite consulta manual ao retornar.
-7. Vídeos recebidos aparecem no player. Usar como vídeo recebido associa o link ao roteiro pelo salvamento normal do workspace. Distribuição continua separada.
+## Conexão e contrato reais
 
-Cada envio é uma cena conforme duração e modelo escolhidos. Não há promessa de montar automaticamente um episódio inteiro a partir de um roteiro de 36 segundos. Os takes podem exigir montagem posterior. Links de resultados são os fornecidos pelo serviço; armazenamento permanente próprio não foi implantado.
+A conexão OAuth KAIROGEN já existente foi validada por leitura autenticada em 13/11/2026. Foram consultados tools/list, list_models e get_credits; o catálogo respondeu com 22 modelos, dos quais o adaptador oferece apenas modalidades de texto compatíveis. O painel usa nomes, durações e opções desse catálogo, sem preços fixos inventados.
 
-## Proteções
+Os schemas reais confirmam estimate_cost, generate_video e get_generation. A cotação exige plan_key e o custo usa credit_cost; a geração admite expected_credits para rejeitar cobrança diferente. O backend envia o limite aprovado e força wait_for_completion=false. Parâmetros específicos do modelo são enviados igualmente na cotação e geração por extra_params.
 
-Aprovação vinculada ao conteúdo salvo; edições invalidam o vínculo. Cotações e jobs são persistidos em tabelas próprias, com workspace, roteiro, parâmetros e custo. Confirmação de uma cotação é consumida uma única vez por transição atômica. Timeout ou resposta sem ID fica incerto e não é reenviado automaticamente. Enquanto houver resultado incerto/em andamento, outra cotação para o mesmo roteiro é bloqueada. Isso é prevenção de duplicidade, não garantia de estorno do provedor.
+A consulta automática get_subscription_status foi recusada pelo provedor. Ela foi removida do fluxo. O usuário seleciona seu plano atual entre as opções anunciadas pelo schema da cotação; isso não altera assinatura nem compra créditos. O plano fica registrado e visível na revisão. Selecionar um plano incorreto pode causar rejeição do envio pelo limite de créditos.
 
-Os parâmetros são validados pelo JSON Schema anunciado no MCP. Contratos sem cotação, vídeo assíncrono e consulta compatíveis são recusados. A cotação precisa representar os parâmetros relevantes enviados. Respostas livres não são interpretadas como preço. URLs de vídeo precisam usar HTTPS e não conter usuário/senha.
+## Aprovação e segurança
 
-## Limite de validação real
+Tokens OAuth criptografados, login privado e segredos apenas no ambiente preview. Roteiro aprovado é vinculado ao conteúdo salvo; editar invalida a aprovação. Cotação tem validade de dez minutos. No envio, o servidor confere novamente aprovação, contrato e custo. A mesma cotação é consumida uma única vez, inclusive com dois cliques concorrentes.
 
-A descoberta OAuth pública foi verificada: autorização por código, refresh e PKCE S256. Inicialização anônima do MCP retornou 401. A autorização da conta no painel ainda é necessária para conhecer os schemas reais.
+Resultados sem confirmação ficam incertos, sem reenvio automático. O operador deve consultar o provedor antes de tentar outra geração desse roteiro. Uma conexão autorizada não permite gasto sem confirmação de custo no painel. Publicação social permanece separada.
 
-O adaptador inicial espera ferramentas estimate_cost, generate_video e get_generation, com entradas escalares, prompt e wait_for_completion=false. Esses nomes estavam no histórico do projeto; não foram confirmados na conta autenticada nesta rodada. Campos de custo aceitos são créditos explícitos; respostas diferentes bloqueiam a geração até adaptação. Não chamar testes com fixture de validação do provedor.
+## Resultados e limites
 
-A interface apresenta campos anunciados pelo contrato, não modelos ou preços inventados. Caso o modelo venha como texto livre em vez de enumeração, será necessário adaptar o catálogo autenticado para oferecer seleção amigável antes do uso real.
+Histórico e cotações ficam no banco. Enquanto o painel está aberto e visível, ele consulta trabalhos em processamento a cada 15 segundos. Após reabrir, recupera o histórico e permite atualização manual. O processamento assíncrono aceito continua no provedor; não existe um worker de montagem próprio.
 
-## Verificação realizada
+Os players usam links HTTPS retornados pela KAIROGEN. Armazenamento permanente próprio dos arquivos ainda não foi implementado; links podem expirar. A geração e o retorno de um primeiro vídeo real dependem da aprovação do usuário e ainda não foram validados nesta implantação.
 
-- Build TypeScript/Vite aprovado; avisos existentes de diretivas de lucide-react sem falha de build.
-- Três suítes npm test aprovadas, incluindo banco real isolado e provedor simulado.
-- Testes cobrem falta de aprovação, roteiro não salvo/alterado, custo alterado, confirmação ausente, envio concorrente, revogação, timeout, isolamento e recuperação do resultado.
-- Navegador real de teste: aprovar, cotar, confirmar uma vez, receber vídeo simulado, recarregar e invalidar aprovação após edição. Sem chamada externa de geração.
-- Axe: zero violações detectadas no fluxo testado. Viewport 390px sem overflow horizontal. Não é certificação integral de acessibilidade.
-- Tabelas novas criadas de forma aditiva durante preparação/testes; somente workspaces de teste foram removidos. Os 24 rascunhos reais não foram editados.
+## Verificação
 
-## Publicação e próxima validação
+- Build TypeScript/Vite aprovado.
+- Quatro testes aprovados: persistência/autenticação, aprovação/custo/idempotência, publicação HubPost e catálogo/contrato KAIROGEN.
+- Fixtures de schemas e catálogo derivadas da leitura autenticada; preços e vídeos dos testes são simulados.
+- Navegador: modelo/plano, aprovação antes do custo, consentimento antes do envio, vídeo simulado recuperado após recarregar e edição invalidando aprovação.
+- Axe: zero violações no fluxo testado; largura 390px sem overflow horizontal. Não é certificação integral do site.
+- Nenhum roteiro real foi aprovado ou alterado pelos testes. Nenhum crédito foi gasto e nenhum vídeo foi publicado.
 
-Commit/push na branch preview e publicação apenas na prévia Vercel autorizados explicitamente pelo usuário em 13/11/2026. Publicação em preparação. Depois autorizar KAIROGEN na área Integrações, consultar tools/list e adaptar o contrato real quando necessário. Validar leitura/cotação antes de solicitar aprovação de qualquer geração paga. Não configurar credenciais de produção.
-
-Prévia existente: https://fabrica-viral-gta-vi-git-preview-vinicius-arenales-projects.vercel.app
-
-Fontes: https://kairogen.ai/mcp e https://mcp.kairogen.ai/.well-known/oauth-protected-resource.
+Fontes técnicas: https://kairogen.ai/mcp e schemas do MCP autenticado https://mcp.kairogen.ai/mcp .

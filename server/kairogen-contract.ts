@@ -33,16 +33,16 @@ export function generationArgs(tool:Tool,input:unknown){
  if(typeof args.prompt!=='string'||!args.prompt.trim()||args.prompt.length>20000)throw new HttpError(400,'Descreva a cena a gerar.');
  return check(tool,args);
 }
-export function quoteArgs(tool:Tool,args:Record<string,unknown>){
+export function quoteArgs(tool:Tool,args:Record<string,unknown>,context:Record<string,unknown>={}){
  const props=tool.inputSchema.properties||{};
  const omitted=Object.keys(args).filter(k=>!(k in props)&&!['prompt','negative_prompt','seed','wait_for_completion'].includes(k));
  if(omitted.length)throw new HttpError(409,'A cotação não cobre todos os parâmetros desta cena. O contrato precisa ser adaptado antes de gerar.');
  const mapped=Object.fromEntries(Object.entries(args).filter(([k])=>k in props));
  // No guessed model, type or duration defaults: unknown required fields block submission.
- return check(tool,mapped);
+ return check(tool,{...mapped,...(context.plan_key!==undefined?{plan_key:context.plan_key}:{})});
 }
 export function credits(result:unknown){
- const p=payload(result);const value=p.credits??p.cost_credits??p.estimated_credits;
+ const p=payload(result);const value=p.credit_cost??p.credits??p.cost_credits??p.estimated_credits;
  if(typeof value!=='number'||!Number.isFinite(value)||value<0)throw new HttpError(409,'O serviço não retornou um custo numérico em créditos reconhecido. Geração bloqueada.');
  return value;
 }

@@ -1,3 +1,4 @@
+import {sceneModels,sceneParameters} from './kairogen-catalog.js';
 import {randomUUID} from 'node:crypto';
 import {loadWorkspace,sql,workspaceId,HttpError} from './database.js';
 import {connectionTools,kairogenCall,refreshConnection} from './integrations.js';
@@ -22,7 +23,7 @@ export async function generationOperation(input:Record<string,any>,origin:string
  const job=async()=>{if(typeof input.jobId!=='string'||!/^[0-9a-f-]{36}$/i.test(input.jobId))throw new HttpError(400,'Geração inválida.');
   const [j]=await db`SELECT * FROM fv_generation_jobs WHERE workspace_id=${wid} AND id=${input.jobId}::uuid`;
   if(!j)throw new HttpError(404,'Geração não encontrada.');return j;};
- const view=(j:any)=>({id:j.id,itemId:j.item_id,status:j.status,createdAt:j.created_at,updatedAt:j.updated_at,cost:j.payload.cost,expiresAt:j.payload.expiresAt,parameters:j.payload.parameters,urls:j.payload.urls||[],externalId:j.payload.externalId||null});
+ const view=(j:any)=>({id:j.id,itemId:j.item_id,status:j.status,createdAt:j.created_at,updatedAt:j.updated_at,cost:j.payload.cost,planKey:j.payload.planKey,expiresAt:j.payload.expiresAt,parameters:j.payload.parameters,urls:j.payload.urls||[],externalId:j.payload.externalId||null});
  if(input.operation==='list'){
   const jobs=await db`SELECT * FROM fv_generation_jobs WHERE workspace_id=${wid} ORDER BY created_at DESC LIMIT 100`;
   const approvals=await db`SELECT item_id,script_hash,approved_at FROM fv_script_approvals WHERE workspace_id=${wid}`;
@@ -46,16 +47,24 @@ export async function generationOperation(input:Record<string,any>,origin:string
   const fields=Object.entries(properties).filter(([k])=>k!=='wait_for_completion').map(([name,schema]:[string,any])=>({name,...schema,required:(c.generate.inputSchema.required||[]).includes(name)}));
   if(fields.some((f:any)=>f.required&&!['string','number','integer','boolean'].includes(f.type)))throw new HttpError(409,'Este modelo exige referências estruturadas ainda não suportadas no painel.');
   const read=async(name:string,args:Record<string,unknown>)=>{const tool=tools.find(t=>t.name===name);if(!tool)return null;check(tool,args);return payload(await deps.call(name,args,origin));};
-  const [catalog,account,subscription]=await Promise.all([read('list_models',{type:'video'}),read('get_credits',{}),read('get_subscription_status',{})]);
-  return {fields:fields.filter((f:any)=>['string','number','integer','boolean'].includes(f.type)),catalog,account,subscription,tools:tools.filter(t=>['generate_video','estimate_cost','get_generation','list_models','get_credits'].includes(t.name))};
+  const [catalog,account]=await Promise.all([read('list_models',{type:'video'}),read('get_credits',{}).catch(()=>null)]);
+  const models=catalog?sceneModels(catalog,c.generate):null;
+  const planOptions=c.quote.inputSchema.properties?.plan_key?.enum;
+  return {fields:fields.filter((f:any)=>['string','number','integer','boolean'].includes(f.type)&&(!models||['model','prompt'].includes(f.name))).map((f:any)=>models&&f.name==='model'?{...f,enum:models.map(m=>m.key),description:undefined}:({...f,description:undefined})),models,planOptions,creditsRemaining:account?.credits_remaining};
  }
  if(input.operation==='quote'){
   const c=await approved();const active=await db`SELECT id FROM fv_generation_jobs WHERE workspace_id=${wid} AND item_id=${input.itemId} AND status IN ('sending','processing','uncertain') LIMIT 1`;
   if(active.length)throw new HttpError(409,'Existe uma geração em andamento ou sem confirmação. Confira o resultado antes de preparar outra.');
-  const spec=contract(await deps.tools(origin));const parameters=generationArgs(spec.generate,input.parameters);
-  const cost=credits(await deps.call(spec.quote.name,quoteArgs(spec.quote,parameters),origin));
+  const tools=await deps.tools(origin),spec=contract(tools);
+  let values=input.parameters;
+  const catalogTool=tools.find(t=>t.name==='list_models');
+  if(catalogTool){const args=check(catalogTool,{type:'video'});const models=sceneModels(payload(await deps.call('list_models',args,origin)),spec.generate);values=sceneParameters(spec.generate,models,values||{});}
+  const parameters=generationArgs(spec.generate,values);
+  const context=input.planKey?{plan_key:input.planKey}:{};
+  if((spec.quote.inputSchema.required||[]).includes('plan_key')&&!input.planKey)throw new HttpError(400,'Selecione o plano da sua conta KAIROGEN para consultar o custo.');
+  const cost=credits(await deps.call(spec.quote.name,quoteArgs(spec.quote,parameters,context),origin));
   const now=await approved();if(now.hash!==c.hash)throw new HttpError(409,'O roteiro mudou durante a consulta. Revise novamente.');
-  const id=randomUUID(),data={parameters,cost,expiresAt:new Date(Date.now()+10*60000).toISOString(),contractHash:spec.fingerprint,script:editorial(c.item)};
+  const id=randomUUID(),data={parameters,cost,planKey:input.planKey,expiresAt:new Date(Date.now()+10*60000).toISOString(),contractHash:spec.fingerprint,script:editorial(c.item)};
   // Unique quote owns one explicit paid intent. It is never resent after an uncertain response.
   await db`INSERT INTO fv_generation_jobs(id,workspace_id,item_id,script_hash,status,payload) VALUES(${id},${wid},${input.itemId},${c.hash},'quoted',${JSON.stringify(data)}::jsonb)`;
   return view((await db`SELECT * FROM fv_generation_jobs WHERE id=${id}`)[0]);
@@ -68,14 +77,15 @@ export async function generationOperation(input:Record<string,any>,origin:string
   if(c.hash!==j.script_hash||Date.parse(j.payload.expiresAt)<Date.now())throw new HttpError(409,'A cotação expirou ou o roteiro mudou. Consulte o custo novamente.');
   const spec=contract(await deps.tools(origin));if(spec.fingerprint!==j.payload.contractHash)throw new HttpError(409,'O contrato da KAIROGEN mudou. Consulte o custo novamente.');
   check(spec.generate,j.payload.parameters);
-  const latest=credits(await deps.call(spec.quote.name,quoteArgs(spec.quote,j.payload.parameters),origin));
+  const latest=credits(await deps.call(spec.quote.name,quoteArgs(spec.quote,j.payload.parameters,j.payload.planKey?{plan_key:j.payload.planKey}:{}),origin));
   if(latest!==j.payload.cost){await db`UPDATE fv_generation_jobs SET status='expired',updated_at=now() WHERE id=${j.id} AND status='quoted'`;throw new HttpError(409,'O custo mudou. Consulte e aprove uma nova cotação.');}
+  const sendParameters=check(spec.generate,{...j.payload.parameters,...(spec.generate.inputSchema.properties?.expected_credits?{expected_credits:latest}:{})});
   const final=await approved();if(final.hash!==j.script_hash)throw new HttpError(409,'O roteiro mudou. Aprove novamente.');
   const claimed=await db`UPDATE fv_generation_jobs SET status='sending',updated_at=now() WHERE id=${j.id} AND workspace_id=${wid} AND status='quoted' AND EXISTS(SELECT 1 FROM fv_workspace WHERE id=${wid} AND revision=${final.revision}) AND EXISTS(SELECT 1 FROM fv_script_approvals WHERE workspace_id=${wid} AND item_id=${j.item_id} AND script_hash=${j.script_hash}) RETURNING id`;
   if(!claimed.length)return view(await job());
   // A send is attempted at most once for this quote, including process failure or double-click.
   try{
-   const raw=await deps.call(spec.generate.name,j.payload.parameters,origin);
+   const raw=await deps.call(spec.generate.name,sendParameters,origin);
    const response=generationResult(raw);
    if(!response.externalId&&response.status!=='completed'&&response.status!=='failed')throw new Error('Missing external ID');
    const updated={...j.payload,...response};
