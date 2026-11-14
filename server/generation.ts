@@ -5,12 +5,12 @@ import {connectionTools,kairogenCall,refreshConnection} from './integrations.js'
 import {validateProduction} from '../persistence/production.js';
 import {contract,check,credits,editorial,generationArgs,generationResult,quoteArgs,scriptHash,statusArgs,payload,type Tool} from './kairogen-contract.js';
 export type GenerationDependencies={tools:(origin:string)=>Promise<Tool[]>;call:(name:string,args:Record<string,unknown>,origin:string)=>Promise<any>};
-const defaults:GenerationDependencies={tools:async(origin)=>{await refreshConnection('kairogen',origin);return connectionTools('kairogen');},call:kairogenCall};
+export const generationDefaults:GenerationDependencies={tools:async(origin)=>{await refreshConnection('kairogen',origin);return connectionTools('kairogen');},call:kairogenCall};
 export const generationSchema=[
  `CREATE TABLE IF NOT EXISTS fv_script_approvals(workspace_id text NOT NULL,item_id text NOT NULL,script_hash text NOT NULL,approved_at timestamptz NOT NULL DEFAULT now(),PRIMARY KEY(workspace_id,item_id))`,
  `CREATE TABLE IF NOT EXISTS fv_generation_jobs(id uuid PRIMARY KEY,workspace_id text NOT NULL,item_id text NOT NULL,script_hash text NOT NULL,status text NOT NULL,payload jsonb NOT NULL,created_at timestamptz NOT NULL DEFAULT now(),updated_at timestamptz NOT NULL DEFAULT now())`
 ];
-export async function generationOperation(input:Record<string,any>,origin:string,deps=defaults){
+export async function generationOperation(input:Record<string,any>,origin:string,deps=generationDefaults){
  const db=sql(),wid=workspaceId();
  const current=async()=>{
   const loaded=await loadWorkspace();const item=loaded.state?.production?.find(x=>x.id===input.itemId);
@@ -23,7 +23,7 @@ export async function generationOperation(input:Record<string,any>,origin:string
  const job=async()=>{if(typeof input.jobId!=='string'||!/^[0-9a-f-]{36}$/i.test(input.jobId))throw new HttpError(400,'Geração inválida.');
   const [j]=await db`SELECT * FROM fv_generation_jobs WHERE workspace_id=${wid} AND id=${input.jobId}::uuid`;
   if(!j)throw new HttpError(404,'Geração não encontrada.');return j;};
- const view=(j:any)=>({id:j.id,itemId:j.item_id,status:j.status,createdAt:j.created_at,updatedAt:j.updated_at,cost:j.payload.cost,planKey:j.payload.planKey,expiresAt:j.payload.expiresAt,parameters:j.payload.parameters,urls:j.payload.urls||[],externalId:j.payload.externalId||null});
+ const view=(j:any)=>({id:j.id,itemId:j.item_id,status:j.status,createdAt:j.created_at,updatedAt:j.updated_at,cost:j.payload.cost,planKey:j.payload.planKey,expiresAt:j.payload.expiresAt,parameters:j.payload.parameters,urls:j.payload.urls||[],externalId:j.payload.externalId||null,providerStatus:j.payload.providerStatus,responseShape:j.payload.responseShape});
  if(input.operation==='list'){
   const jobs=await db`SELECT * FROM fv_generation_jobs WHERE workspace_id=${wid} ORDER BY created_at DESC LIMIT 100`;
   const approvals=await db`SELECT item_id,script_hash,approved_at FROM fv_script_approvals WHERE workspace_id=${wid}`;
@@ -72,6 +72,9 @@ export async function generationOperation(input:Record<string,any>,origin:string
  if(input.operation==='generate'){
   if(input.confirmed!==true)throw new HttpError(400,'Confirme o custo e a cena antes de gerar.');
   const j=await job();input.itemId=j.item_id;
+  if(j.payload.batchId)throw new HttpError(409,'Esta cena pertence à linha de produção. Use os controles do episódio.');
+  const queued=await db`SELECT id FROM fv_production_batches WHERE workspace_id=${wid} AND item_id=${j.item_id} AND status IN ('queued','running','paused','review') LIMIT 1`;
+  if(queued.length)throw new HttpError(409,'Este roteiro está na linha de produção. Acompanhe o episódio.');
   if(j.status!=='quoted')return view(j);
   const c=await approved();
   if(c.hash!==j.script_hash||Date.parse(j.payload.expiresAt)<Date.now())throw new HttpError(409,'A cotação expirou ou o roteiro mudou. Consulte o custo novamente.');

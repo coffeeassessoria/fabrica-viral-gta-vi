@@ -58,5 +58,8 @@ export function generationResult(result:unknown){
  const urls=candidates.filter((v):v is string=>{if(typeof v!=='string')return false;try{const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password;}catch{return false;}});
  const failed=['failed','error','cancelled','canceled'].includes(state);
  const complete=['completed','complete','succeeded','success','done'].includes(state);
- return {externalId:typeof id==='string'&&id.length<=300?id:null,status:failed?'failed':complete&&urls.length?'completed':'processing',urls:complete?urls:[]} as const;
+ const shape=(obj:any,prefix='',depth=0):string[]=>obj&&typeof obj==='object'&&depth<3?Object.entries(obj).filter(([k])=>/^[a-zA-Z_]{1,60}$/.test(k)).slice(0,30).flatMap(([k,v])=>[prefix+k+':'+(Array.isArray(v)?'array':typeof v),...shape(v,prefix+k+'.',depth+1)]):[];
+ const responseShape=shape(p);
+ const providerStatus=['queued','pending','processing','completed','complete','succeeded','success','done','failed','error','cancelled','canceled'].includes(state)?state:'unrecognized';
+ return {providerStatus,responseShape,externalId:typeof id==='string'&&id.length<=300?id:null,status:failed?'failed':complete&&urls.length?'completed':'processing',urls:complete?urls:[]} as const;
 }

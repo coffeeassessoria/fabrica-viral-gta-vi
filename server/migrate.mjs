@@ -2,6 +2,8 @@ import {neon} from '@neondatabase/serverless';
 if(!process.env.DATABASE_URL)throw new Error('DATABASE_URL ausente.');
 const sql=neon(process.env.DATABASE_URL);
 await sql.transaction([
+ sql`CREATE TABLE IF NOT EXISTS fv_production_batches(id uuid PRIMARY KEY,workspace_id text NOT NULL,item_id text NOT NULL,script_hash text NOT NULL,status text NOT NULL,payload jsonb NOT NULL,lease_id uuid,lease_until timestamptz,created_at timestamptz NOT NULL DEFAULT now(),updated_at timestamptz NOT NULL DEFAULT now())`,
+ sql`CREATE UNIQUE INDEX IF NOT EXISTS fv_one_active_batch ON fv_production_batches(workspace_id,item_id) WHERE status IN ('queued','running','paused','review')`,
  sql`CREATE TABLE IF NOT EXISTS fv_script_approvals(workspace_id text NOT NULL,item_id text NOT NULL,script_hash text NOT NULL,approved_at timestamptz NOT NULL DEFAULT now(),PRIMARY KEY(workspace_id,item_id))`,
  sql`CREATE TABLE IF NOT EXISTS fv_generation_jobs(id uuid PRIMARY KEY,workspace_id text NOT NULL,item_id text NOT NULL,script_hash text NOT NULL,status text NOT NULL,payload jsonb NOT NULL,created_at timestamptz NOT NULL DEFAULT now(),updated_at timestamptz NOT NULL DEFAULT now())`,
  sql`CREATE TABLE IF NOT EXISTS fv_workspace(id text PRIMARY KEY,revision integer NOT NULL,state jsonb NOT NULL,updated_at timestamptz NOT NULL DEFAULT now())`,

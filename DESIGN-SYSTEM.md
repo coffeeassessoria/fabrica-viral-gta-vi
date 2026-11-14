@@ -124,3 +124,10 @@ O sistema **must not** usar “AO VIVO”, “conectado” ou “publicado” ap
 - A distribuição **must** distinguir envio de arquivo à biblioteca de publicação em rede. Selecionar um arquivo **must not** transmiti-lo antes do botão explícito. A confirmação final **must** mostrar o nome da mídia e todas as opções específicas da plataforma.
 - A interface **must** mapear accountId e mediaId do contrato real do HubPost. Formatos desconhecidos de upload **must** ser rejeitados antes de transmitir o arquivo. Endereços assinados **must not** aparecer em logs ou mensagens de diagnóstico.
 - Rascunho, agendamento e publicação imediata **must** seguir a semântica anunciada no schema ativo. A modalidade **must not** ser inferida somente de um botão visual.
+
+## Linha de produção por episódio
+
+- O orçamento **must** exibir todas as cenas, durações geradas, total e consentimento único antes de iniciar. Consultar preço **must not** gerar vídeos.
+- A navegação **must** usar seleção de episódio e etapas nomeadas; editores e ferramentas avançadas **should** ficar recolhidos inicialmente. Estados de fila e erro **must** aparecer em texto, com ações descritivas e feedback anunciável.
+- A interface **must** distinguir cenas recebidas, revisão visual, montagem e publicação. Aprovação técnica **must not** prometer qualidade visual automática. Cancelamento **must** preservar registros e informar o efeito sobre uma cena já enviada.
+- Estados, teclado, toque, foco e tokens **must** seguir a tabela comum deste documento. Cotações expiradas e roteiro alterado **must** desabilitar confirmação do orçamento anterior.

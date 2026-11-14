@@ -154,3 +154,11 @@ Consulte [estado e limites da integração direta](docs/KAIROGEN-DIRETO.md). As 
 - Roteiros sem tabela reconhecida são carregados como uma cena única para revisão. Duração prevista é sugerida somente quando suportada pelo modelo; diferenças ficam visíveis antes da cotação.
 - Nenhuma chamada paga ou aprovação editorial é disparada automaticamente. Aprovação de custo e confirmação de geração continuam obrigatórias.
 - Build, cinco testes e navegador aprovados. Verificado carregamento de sete cenas sem copiar/colar, restauração de roteiro aprovado, preservação de edição ao trocar de cena e invalidação de cotação; zero violações Axe no fluxo e 390px sem overflow. Provedor simulado nos testes, sem gasto real.
+
+## Linha de produção — validação local 13/11/2026
+
+- Build e seis testes de backend aprovados. Novo teste cobre aprovação única, duração suportada, orçamento total, entregas concorrentes, pausa/retomada, mudança de preço, resposta incerta, alteração editorial e isolamento por workspace.
+- Fluxo avulso preservado: teste no navegador aprovado, zero violações Axe e 390px sem overflow.
+- Fluxo novo: sete envios simulados após uma aprovação, worker executado com página fechada, sete resultados recuperados ao reabrir, revisão final persistida. Zero violações Axe na revisão de orçamento; 320px e 390px sem overflow. Não é certificação WCAG integral.
+- Nenhum vídeo pago foi gerado ou publicado pelo assistente. Uma geração já existente de FV08 foi consultada e ainda requer diagnóstico do retorno do provedor. Custo não equivale a cobrança confirmada.
+- A fila real da Vercel será conferida com mensagem diagnóstica sem chamada de geração. Testes de worker até aqui usam dependências simuladas e banco isolado.

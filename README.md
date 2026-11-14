@@ -134,3 +134,9 @@ Consulte [estado e limites da integração direta](docs/KAIROGEN-DIRETO.md). As 
 - Roteiros sem tabela reconhecida são carregados como uma cena única para revisão. Duração prevista é sugerida somente quando suportada pelo modelo; diferenças ficam visíveis antes da cotação.
 - Nenhuma chamada paga ou aprovação editorial é disparada automaticamente. Aprovação de custo e confirmação de geração continuam obrigatórias.
 - Build, cinco testes e navegador aprovados. Verificado carregamento de sete cenas sem copiar/colar, restauração de roteiro aprovado, preservação de edição ao trocar de cena e invalidação de cotação; zero violações Axe no fluxo e 390px sem overflow. Provedor simulado nos testes, sem gasto real.
+
+## Linha de produção por episódio — 13/11/2026
+
+Em Mesa de produção, escolha o episódio, leia o roteiro e clique em Calcular orçamento do episódio. Confira as durações e o total, marque a aprovação e use Aprovar e iniciar produção. A fila prepara uma cena por vez, com acompanhamento durável no servidor. A tela mostra impedimentos e permite pausar próximas cenas. A revisão visual é feita ao receber as cenas, antes de montagem e publicação.
+
+Plano Pro, Veo 3.1 Lite, 720p e 9:16 formam o preset desta linha; a cotação real valida os parâmetros antes do consentimento. Outros modelos continuam em Ferramentas avançadas. Nenhuma geração é iniciada apenas por aprovar editorialmente o roteiro, abrir a tela ou consultar preços. Consulte docs/ADR-001-LINHA-DE-PRODUCAO.md para estados, limites e infraestrutura. A migração aditiva cria fv_production_batches sem substituir o workspace.

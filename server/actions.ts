@@ -1,3 +1,5 @@
+import {lineOperation} from './production-line.js';
+import {dispatchProduction} from './production-queue.js';
 import {generationOperation} from './generation.js';
 import type {IncomingMessage,ServerResponse} from 'node:http';
 import {loadWorkspace,saveWorkspace,legacyRecords,sql,HttpError} from './database.js';
@@ -28,6 +30,7 @@ export default async function handler(req:IncomingMessage,res:ServerResponse){
     if(action==='workspace.load')return send(res,200,{data:await loadWorkspace()});
     if(action==='workspace.save')return send(res,200,{data:await saveWorkspace(args.state,args.revision)});
     if(action.startsWith('records.'))return send(res,200,{data:await legacyRecords(action,args)});
+    if(action==='production.operation')return send(res,200,{data:await lineOperation(args,origin,dispatchProduction)});
     if(action==='generation.operation')return send(res,200,{data:await generationOperation(args,origin)});
     if(action==='media.operation')return send(res,200,{data:await mediaOperation(args,origin)});
     if(action==='authoring.quote'||action==='authoring.generate')throw new HttpError(410,'Os roteiros são preparados na conversa e organizados na mesa de produção.');
