@@ -124,3 +124,13 @@ Consulte [estado e limites da integração direta](docs/KAIROGEN-DIRETO.md). As 
 - Backend aceita credit_cost, preserva parâmetros de preço e envia expected_credits ao gerar. Roteiro e custo continuam sujeitos à aprovação; nenhuma aprovação real foi inventada.
 - Build, quatro testes e navegador com schemas reais/respostas simuladas aprovados; zero violações Axe no fluxo, 390px sem overflow. Primeiro custo/vídeo real ainda dependem da revisão do usuário.
 - A atualização inicial foi publicada em dpl_6PTNmNSg32KmvELdX7vVqbSKN3pd; os ajustes posteriores seguem na mesma branch preview. Detalhes e limites atuais em docs/KAIROGEN-DIRETO.md.
+
+
+## Cenas carregadas automaticamente — 13/11/2026
+
+- Ao aprovar uma versão ou selecionar um roteiro já aprovado, o painel carrega automaticamente as cenas e o catálogo; não há etapa obrigatória de copiar/colar ou clicar em Preparar cena.
+- Os pilotos FV08, FV12 e FV20 são separados em sete takes a partir de suas tabelas de tempo/ação/fala. Cada descrição conserva personagens, continuidade e brief visual, sem incluir as ações das outras cenas ou continuações da história.
+- Um seletor permite trocar de cena. Trocar modelo mantém a descrição; trocar cena invalida custo/consentimento e mantém ajustes manuais durante a navegação entre cenas na aba. Ao reabrir, o texto volta a ser derivado do roteiro salvo; descrições já cotadas permanecem no histórico de jobs.
+- Roteiros sem tabela reconhecida são carregados como uma cena única para revisão. Duração prevista é sugerida somente quando suportada pelo modelo; diferenças ficam visíveis antes da cotação.
+- Nenhuma chamada paga ou aprovação editorial é disparada automaticamente. Aprovação de custo e confirmação de geração continuam obrigatórias.
+- Build, cinco testes e navegador aprovados. Verificado carregamento de sete cenas sem copiar/colar, restauração de roteiro aprovado, preservação de edição ao trocar de cena e invalidação de cotação; zero violações Axe no fluxo e 390px sem overflow. Provedor simulado nos testes, sem gasto real.

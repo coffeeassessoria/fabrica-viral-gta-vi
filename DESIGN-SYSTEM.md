@@ -114,7 +114,7 @@ O sistema **must not** usar “AO VIVO”, “conectado” ou “publicado” ap
 
 ## Mesa de produção e revisão de publicação
 
-- A mesa **must** preservar roteiros, etapa e link de vídeo no workspace. O pacote **must** indicar produção externa pelo Claude; o painel **must not** sugerir conexão KAIROGEN própria.
+- A mesa **must** preservar roteiros, etapa e link de vídeo no workspace. O pacote exportado **must** indicar produção externa pelo Claude. A integração direta KAIROGEN autorizada pelo usuário **must** separar aprovação de roteiro, consulta de custo e confirmação paga. Cenas carregadas automaticamente **must not** disparar geração; mudar cena **must** invalidar cotação e consentimento anteriores.
 - Campos de texto longo **must** ter rótulos associados por for/id. URLs incompletas **must** continuar editáveis como rascunho; a validação para publicação **must** exigir HTTPS e ausência de credenciais no endereço.
 - Conta, legenda, vídeo, modalidade e horário **must** ser apresentados antes da confirmação. A ação final **must** ficar desabilitada até o consentimento por envio e durante a requisição; alterações **must** invalidar a revisão anterior.
 - Repetição após falha **must** reutilizar o ID daquela revisão. Resultado incerto **must** orientar a consulta de histórico, sem confirmar publicação ou reenviar automaticamente.
