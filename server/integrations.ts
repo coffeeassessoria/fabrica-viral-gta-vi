@@ -81,7 +81,7 @@ export async function callProvider(provider:Provider,operation:string,args:Recor
 
 // Internal capability: never route arbitrary browser calls to generation tools.
 export async function kairogenCall(operation:string,args:Record<string,unknown>,origin:string){
- if(!['estimate_cost','generate_video','get_generation','list_models','get_credits'].includes(operation))throw new HttpError(400,'Operação KAIROGEN não permitida.');
+ if(!['estimate_cost','generate_video','get_generation','list_models','get_credits','get_subscription_status'].includes(operation))throw new HttpError(400,'Operação KAIROGEN não permitida.');
  const tools=await connectionTools('kairogen');if(!tools.some(t=>t.name===operation))throw new HttpError(409,'Ferramenta indisponível nesta conexão.');
  return withClient('kairogen',origin,client=>client.callTool({name:operation,arguments:args},undefined,{timeout:25000}));
 }
