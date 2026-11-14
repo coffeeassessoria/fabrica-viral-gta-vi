@@ -44,6 +44,6 @@ A conta consultada usa Hobby. A documentação atual inclui o primeiro milhão d
 - [x] Testar aprovação, custo, concorrência, isolamento, pausa, erro ambíguo e edição de roteiro.
 - [x] Testar sete cenas com navegador fechado, usando provedor simulado.
 - [x] Verificar nomes acessíveis, contraste automatizado e reflow 320/390px.
-- [ ] Conferir recebimento da fila real com probe sem vídeo.
+- [x] Conferir recebimento da fila real com probe sem vídeo (incluindo assinatura HMAC).
 - [ ] Confirmar uma produção paga completa somente quando aprovada pelo operador no produto.
 - [ ] Planejar montagem final e persistência própria de mídia em fase posterior.

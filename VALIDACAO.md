@@ -162,3 +162,12 @@ Consulte [estado e limites da integração direta](docs/KAIROGEN-DIRETO.md). As 
 - Fluxo novo: sete envios simulados após uma aprovação, worker executado com página fechada, sete resultados recuperados ao reabrir, revisão final persistida. Zero violações Axe na revisão de orçamento; 320px e 390px sem overflow. Não é certificação WCAG integral.
 - Nenhum vídeo pago foi gerado ou publicado pelo assistente. Uma geração já existente de FV08 foi consultada e ainda requer diagnóstico do retorno do provedor. Custo não equivale a cobrança confirmada.
 - A fila real da Vercel será conferida com mensagem diagnóstica sem chamada de geração. Testes de worker até aqui usam dependências simuladas e banco isolado.
+
+## Linha publicada e vídeo recuperado — 13/11/2026
+
+- Código funcional e correção de retorno publicados na branch preview, commit e6edac5, deployment dpl_ACzMUqQ5sQMPK53n8KL7PGF3vxkt READY. O endereço curto continua apontando para a prévia, com o mesmo código privado.
+- A primeira publicação falhou por precedência dos padrões functions; corrigido colocando o worker específico antes do padrão geral. Nenhuma versão quebrada substituiu a versão disponível.
+- Duas mensagens diagnósticas chegaram à fila real; a segunda já com HMAC validado no worker. Nenhuma delas chama generate_video. Metadados de diagnóstico usam registros probe, ocultos da lista editorial.
+- A cena FV08 enviada anteriormente pelo usuário estava concluída na KAIROGEN. O retorno real usa output_urls; adaptador corrigido e teste adicionado. Consulta posterior confirmou completed e um vídeo disponível. Não houve reenvio nem consumo adicional de geração pelo assistente.
+- Navegador no endereço público: login confirmado, linha visível, vídeo anterior presente, orçamento real de FV12 consultado e botão de iniciar bloqueado até consentimento. Em 390px não houve overflow; nenhuma geração foi confirmada.
+- Build e seis testes passam após correção, incluindo rejeição de assinatura alterada no worker. A produção completa foi validada com provedor simulado; a primeira produção paga em lote continua dependente de aprovação explícita do operador no painel.
