@@ -19,4 +19,4 @@
 - Manter IDs FV01–FV07 alinhados entre catálogo, roteiros, calendário e métricas. Não declarar resultado de votação sem apuração real.
 - Aprovação editorial é diferente de autorização para postagem. Nenhuma integração autoriza postagem por conta própria.
 
-- Branch de trabalho para esta fase: `preview`. Deploy manual deve incluir `--environment preview`; não depender do padrão da primeira implantação da CLI. O domínio canônico não foi remapeado.
+- Branch de trabalho para esta fase: `preview`. Deploy manual deve incluir `--environment preview`; não depender do padrão da primeira implantação da CLI. O domínio curto fabrica-viral-gta-vi.vercel.app acompanha a branch preview por autorização do usuário; preservar o código privado do aplicativo e o escopo de segredos apenas na prévia.

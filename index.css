@@ -219,3 +219,6 @@ label { color: var(--color-muted); }
 .consent-line { display:flex; align-items:center; gap:var(--space-control); margin-top:var(--space-1); font-size:var(--text-xs); }
 .consent-line input { width:24px; flex-shrink:0; accent-color:var(--color-accent); }
 details summary { cursor:pointer; color:var(--color-accent); min-height:44px; }
+
+.generation-consent { display: flex; align-items: flex-start; gap: var(--space-control); min-height: var(--control-min); cursor: pointer; }
+.generation-consent input[type="checkbox"] { width: var(--space-2); height: var(--space-2); min-height: var(--space-2); padding: 0; margin: var(--space-micro) 0 0; flex: 0 0 var(--space-2); accent-color: var(--color-accent); }

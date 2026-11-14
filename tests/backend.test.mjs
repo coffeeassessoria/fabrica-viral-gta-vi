@@ -42,7 +42,8 @@ test('Banco real, salvamento integral, conflito, sessão e criptografia',{timeou
     const cipher=encrypt({token:'token-de-teste'});assert.ok(!cipher.includes('token-de-teste'));assert.deepEqual(decrypt(cipher),{token:'token-de-teste'});
     const tampered=Buffer.from(cipher,'base64');tampered[15]^=1;assert.throws(()=>decrypt(tampered.toString('base64')));
     assert.equal((await request('authoring.generate',{theme:'Teste',confirmed:false})).status,410);
-    assert.equal((await request('integrations.connect',{provider:'kairogen'})).status,410);
+    assert.equal((await request('generation.operation',{operation:'generate',confirmed:false})).status,400);
+    assert.equal((await request('integrations.call',{provider:'kairogen',operation:'generate_video',confirmed:true})).status,400);
     assert.equal((await request('integrations.call',{provider:'hubpost',operation:'create_post',confirmed:true})).status,400);
     assert.equal((await request('media.operation',{provider:'hubpost',operation:'create_post',confirmed:false})).status,400);
     const malformed=await fetch(origin+'/api/actions',{method:'POST',headers:{'content-type':'application/json',cookie},body:'{'});assert.equal(malformed.status,400);

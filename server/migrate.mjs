@@ -2,6 +2,8 @@ import {neon} from '@neondatabase/serverless';
 if(!process.env.DATABASE_URL)throw new Error('DATABASE_URL ausente.');
 const sql=neon(process.env.DATABASE_URL);
 await sql.transaction([
+ sql`CREATE TABLE IF NOT EXISTS fv_script_approvals(workspace_id text NOT NULL,item_id text NOT NULL,script_hash text NOT NULL,approved_at timestamptz NOT NULL DEFAULT now(),PRIMARY KEY(workspace_id,item_id))`,
+ sql`CREATE TABLE IF NOT EXISTS fv_generation_jobs(id uuid PRIMARY KEY,workspace_id text NOT NULL,item_id text NOT NULL,script_hash text NOT NULL,status text NOT NULL,payload jsonb NOT NULL,created_at timestamptz NOT NULL DEFAULT now(),updated_at timestamptz NOT NULL DEFAULT now())`,
  sql`CREATE TABLE IF NOT EXISTS fv_workspace(id text PRIMARY KEY,revision integer NOT NULL,state jsonb NOT NULL,updated_at timestamptz NOT NULL DEFAULT now())`,
  sql`CREATE TABLE IF NOT EXISTS fv_workspace_history(id bigserial PRIMARY KEY,workspace_id text NOT NULL,revision integer NOT NULL,state jsonb NOT NULL,saved_at timestamptz NOT NULL DEFAULT now())`,
  sql`CREATE OR REPLACE FUNCTION fv_workspace_archive() RETURNS trigger AS $$ BEGIN INSERT INTO fv_workspace_history(workspace_id,revision,state) VALUES(OLD.id,OLD.revision,OLD.state); DELETE FROM fv_workspace_history WHERE workspace_id=OLD.id AND id NOT IN(SELECT id FROM fv_workspace_history WHERE workspace_id=OLD.id ORDER BY id DESC LIMIT 100); RETURN NEW; END; $$ LANGUAGE plpgsql`,

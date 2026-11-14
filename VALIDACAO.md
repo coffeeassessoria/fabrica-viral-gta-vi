@@ -97,3 +97,42 @@ Confira a pasta original e o backup antes de novas alterações. Use `README.md`
 
 ## Pasta principal atual
 Em 13/11/2026, a pedido do usuário, a interface canônica foi consolidada em fabrica-viral-interface dentro de E:\PROJETOS IA\projeto-fabrica-de-monetizar. Dependências instaladas nessa pasta e npm run build concluído novamente. Arquivos preexistentes preservados em backups/antes-consolidacao-20261113-160536. A pasta outputs da conversa é somente uma cópia histórica.
+
+
+## Conteúdo de Leonida cadastrado — 13/11/2026
+
+24 itens FV08–FV31 foram adicionados ao workspace principal como Rascunho; FV08, FV12 e FV20 contêm os pilotos completos. Revisão do banco passou de 1 para 2. Importação validada pelo schema, backup privado preservado e releitura integral conferida; demais coleções permaneceram iguais. Não houve geração, aprovação editorial atribuída, agendamento ou postagem. O código não foi alterado.
+
+Consulte [Claude e KAIROGEN: verificação e decisão](docs/pesquisa-2026-11-13/CLAUDE-KAIROGEN-DECISAO.md) para o fluxo atual e a proposta de geração dentro do site. A KAIROGEN documenta suporte MCP geral; o backend atual ainda bloqueia conexão direta e não chama Claude API. OAuth público foi verificado com autorização por código, refresh token e PKCE S256; nenhum contrato autenticado de geração foi validado.
+
+
+## KAIROGEN direto — atualização local em 13/11/2026
+
+O usuário autorizou integrar a KAIROGEN diretamente. A nova implementação local oferece aprovação editorial vinculada à versão, consulta e confirmação de custo, envio protegido contra repetição e resultados em vídeo no painel. Build, três suítes de testes e teste de navegador passaram com provedor simulado. A prévia hospedada ainda mantém a versão anterior até autorização de publicação. A conta KAIROGEN precisa ser autorizada no painel e seu contrato real validado antes de liberar geração. Nenhum crédito foi consumido.
+
+Consulte [estado e limites da integração direta](docs/KAIROGEN-DIRETO.md). As descrições anteriores de produção exclusivamente pelo Claude registram a fase anterior. O fluxo de importação dos 24 rascunhos já está no banco e permanece disponível na prévia existente.
+
+## Acesso móvel — 13/11/2026
+
+- Usuário autorizou explicitamente retirar o login Vercel somente do alias `fabrica-viral-gta-vi-git-preview-vinicius-arenales-projects.vercel.app`, preservando o código privado da Fábrica.
+- Exceção persistente `alias-protection-override` aplicada somente nesse alias; também vale para futuras atualizações desse endereço. A proteção geral do projeto não foi desativada; não houve deploy, promoção, commit ou alteração de segredos.
+- Verificação sem cookies: página HTTP 200 sem redirecionamento; `auth.session` retorna `authenticated:false`; `workspace.load` retorna HTTP 401. Dados continuam exigindo autenticação da aplicação.
+
+## Domínio curto — 13/11/2026, configuração parcial
+
+- A pedido do usuário, `fabrica-viral-gta-vi.vercel.app` foi vinculado à branch `preview`. A API confirmou que aponta para `dpl_9JfmqsHPU5rbtTG1jXZBUHs5YJm7`, a mesma versão funcional do alias estável. Não houve novo deploy nem cópia de segredos para produção.
+- A tentativa inicial de redirecionar ao alias automático foi recusada pela Vercel sem aplicar o redirecionamento; o vínculo direto à branch foi aceito.
+- O domínio curto ainda redireciona ao login da Vercel. A revisão automática bloqueou a exceção de proteção para esse novo alias por exigir autorização específica, solicitada ao usuário e ainda pendente. O alias longo permanece funcional e com sua exceção já autorizada.
+- A declaração anterior de domínio canônico não remapeado é histórica: agora o domínio curto acompanha `preview`.
+
+## Domínio curto — acesso concluído em 13/11/2026
+
+- Usuário autorizou explicitamente a exceção persistente de login Vercel também para `fabrica-viral-gta-vi.vercel.app`. Exceção aplicada somente nesse alias; a pendência registrada acima foi resolvida.
+- Endereço principal de acesso pelo celular: https://fabrica-viral-gta-vi.vercel.app . Continua vinculado à branch `preview`, com o mesmo código privado e dados, sem replicação de segredos para produção.
+- Verificação real: página HTTP 200 sem redirecionamento; consulta anônima ao workspace HTTP 401; login com o código privado existente HTTP 200; cookie de sessão validado; leitura autenticada do workspace HTTP 200. Código, cookies e dados não exibidos. Sessão de teste encerrada.
+- Não houve novo deploy, commit ou push. A integração KAIROGEN local não foi publicada por esta mudança de domínio.
+
+## Publicação KAIROGEN autorizada — 13/11/2026
+
+- Usuário autorizou explicitamente commit, push na branch preview e publicação da integração direta no endereço curto atual. Build e três testes npm test reexecutados e aprovados; provedor simulado, sem geração paga.
+- O domínio curto está vinculado a preview. A publicação preserva segredos apenas nesse ambiente. Ainda será necessária autorização OAuth da conta e validação das ferramentas reais antes de gerar.

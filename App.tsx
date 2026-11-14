@@ -316,7 +316,7 @@ export default function App(){
           <div inert={loading?true:undefined}>
           {tab==='midia' && <StudioMedia items={production}/>}
           {tab==='integracoes' && <StudioIntegrations/>}
-          {tab==='producao' && <StudioProduction items={production} onChange={setProduction} onUseCalendar={episodes=>{setCalendar(current=>current.map((day,index)=>({...day,titulo:episodes[index]?.title||day.titulo})));navigate('calendario');}}/>}
+          {tab==='producao' && <StudioProduction save={saveAll} items={production} onChange={setProduction} onUseCalendar={episodes=>{setCalendar(current=>current.map((day,index)=>({...day,titulo:episodes[index]?.title||day.titulo})));navigate('calendario');}}/>}
           {tab==='hoje' && <>
             <section className="mission-hero" aria-labelledby="mission-title">
               <SunsetScene/>
