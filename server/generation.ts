@@ -45,7 +45,7 @@ export async function generationOperation(input:Record<string,any>,origin:string
   const properties=c.generate.inputSchema.properties||{};
   const fields=Object.entries(properties).filter(([k])=>k!=='wait_for_completion').map(([name,schema]:[string,any])=>({name,...schema,required:(c.generate.inputSchema.required||[]).includes(name)}));
   if(fields.some((f:any)=>f.required&&!['string','number','integer','boolean'].includes(f.type)))throw new HttpError(409,'Este modelo exige referências estruturadas ainda não suportadas no painel.');
-  return {fields:fields.filter((f:any)=>['string','number','integer','boolean'].includes(f.type))};
+  return {fields:fields.filter((f:any)=>['string','number','integer','boolean'].includes(f.type)),tools:tools.filter(t=>['generate_video','estimate_cost','get_generation','list_models'].includes(t.name))};
  }
  if(input.operation==='quote'){
   const c=await approved();const active=await db`SELECT id FROM fv_generation_jobs WHERE workspace_id=${wid} AND item_id=${input.itemId} AND status IN ('sending','processing','uncertain') LIMIT 1`;

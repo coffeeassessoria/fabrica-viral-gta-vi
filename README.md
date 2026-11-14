@@ -1,6 +1,6 @@
 # Fábrica Viral — estúdio web
 
-Painel React/Vite com acesso privado, banco Neon Postgres, salvamento automático e produção de vídeo externa pelo Claude com KAIROGEN e conexão autorizada ao HubPost. A pasta canônica é `E:\PROJETOS IA\projeto-fabrica-de-monetizar\fabrica-viral-interface`.
+Painel React/Vite com acesso privado, banco Neon Postgres, salvamento automático e geração direta de cenas pela KAIROGEN sob aprovação de roteiro/custo e conexão autorizada ao HubPost. A pasta canônica é `E:\PROJETOS IA\projeto-fabrica-de-monetizar\fabrica-viral-interface`.
 
 ## O que já funciona
 
@@ -13,9 +13,9 @@ Painel React/Vite com acesso privado, banco Neon Postgres, salvamento automátic
 
 ## Integrações: limites reais
 
-O usuário definiu que os roteiros são preparados na conversa, e o Claude usa sua própria conexão KAIROGEN para gerar os vídeos. A Fábrica organiza e exporta os roteiros; não oferece conexão direta ou geração paga pela KAIROGEN.
+A integração direta KAIROGEN está publicada na prévia. O usuário aprova o roteiro e consulta/confirma o custo antes do envio. O contrato autenticado está em validação: campos ou respostas incompatíveis bloqueiam a geração. Exportação para o Claude continua disponível como alternativa. Nenhuma geração paga foi realizada na implantação.
 
-Somente o HubPost usa OAuth com PKCE nesta interface. Tokens ficam criptografados no banco, nunca no navegador ou no GitHub. Recursos ausentes ou schemas ainda não suportados permanecem bloqueados, sem simular sucesso. A lista real da conta, consultada em 13/11/2026, expõe create_post e ferramentas de mídia, mas não get_analytics. TikTok @gtavi1000grau e YouTube @fabricaviralgtavi1000grau foram encontrados nas contas conectadas. Isso não comprova publicação de vídeo nem sincronização de métricas.
+KAIROGEN e HubPost usam OAuth com PKCE nesta interface. Tokens ficam criptografados no banco, nunca no navegador ou no GitHub. Recursos ausentes ou schemas ainda não suportados permanecem bloqueados, sem simular sucesso. A lista real da conta, consultada em 13/11/2026, expõe create_post e ferramentas de mídia, mas não get_analytics. TikTok @gtavi1000grau e YouTube @fabricaviralgtavi1000grau foram encontrados nas contas conectadas. Isso não comprova publicação de vídeo nem sincronização de métricas.
 
 O HubPost informa que algumas ferramentas de escrita, mídia e analytics estão em liberação; o resultado real da conexão prevalece sobre a página comercial. Criar uma conta não autoriza o painel automaticamente. Consulte [HubPost MCP](https://hubpost.co/mcp) e [API](https://hubpost.co/docs).
 
