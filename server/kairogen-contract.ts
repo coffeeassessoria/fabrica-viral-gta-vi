@@ -54,7 +54,7 @@ export function statusArgs(tool:Tool,id:string){
 export function generationResult(result:unknown){
  const p=payload(result);const id=p.generation_id??p.generationId??p.id;
  const state=String(p.status||'').toLowerCase();
- const candidates=[p.video_url,p.videoUrl,p.output_url,p.url,...(Array.isArray(p.outputs)?p.outputs.map((x:any)=>typeof x==='string'?x:x?.url):[])];
+ const candidates=[...(Array.isArray(p.output_urls)?p.output_urls:[]),p.video_url,p.videoUrl,p.output_url,p.url,...(Array.isArray(p.outputs)?p.outputs.map((x:any)=>typeof x==='string'?x:x?.url):[])];
  const urls=candidates.filter((v):v is string=>{if(typeof v!=='string')return false;try{const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password;}catch{return false;}});
  const failed=['failed','error','cancelled','canceled'].includes(state);
  const complete=['completed','complete','succeeded','success','done'].includes(state);

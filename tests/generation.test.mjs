@@ -57,6 +57,7 @@ test('Aprovação, orçamento, concorrência e recuperação da geração sem cu
   assert.throws(()=>credits({structuredContent:{price:8}}),/custo numérico/);
   assert.throws(()=>credits({structuredContent:{credits:-1}}),/custo numérico/);
   assert.throws(()=>contract([]),/conexão/);
+  const realShape=generationResult({structuredContent:{generation_id:'known',status:'completed',output_urls:['https://example.com/delivered.mp4','javascript:alert(1)']}});assert.equal(realShape.status,'completed');assert.deepEqual(realShape.urls,['https://example.com/delivered.mp4']);
   assert.equal(generationResult({structuredContent:{status:'completed',url:'javascript:alert(1)'}}).status,'processing');
   assert.deepEqual((await loadWorkspace()).state.calendar,initial.calendar);
  }finally{

@@ -5,8 +5,9 @@ import {readFile} from 'node:fs/promises';
 import {createServer} from 'vite';
 
 test('Linha: aprovação única, limite, entregas duplicadas, retomada e falhas sem reenvio',{timeout:120000},async()=>{
- process.env.WORKSPACE_ID='line-test-'+randomUUID();const wid=process.env.WORKSPACE_ID;
+ process.env.SESSION_SECRET=randomUUID();process.env.WORKSPACE_ID='line-test-'+randomUUID();const wid=process.env.WORKSPACE_ID;
  const vite=await createServer({configFile:false,server:{middlewareMode:true,hmr:false},appType:'custom'});
+ const {signedProductionMessage,verifyProductionMessage}=await vite.ssrLoadModule('/server/production-queue.ts');const message=signedProductionMessage(randomUUID());assert.equal(verifyProductionMessage(message),true);assert.equal(verifyProductionMessage({...message,batchId:randomUUID()}),false);assert.equal(verifyProductionMessage({...message,signature:''}),false);
  const {lineOperation:op,productionTick:tick,lineSchema}=await vite.ssrLoadModule('/server/production-line.ts');
  const {generationSchema,generationOperation}=await vite.ssrLoadModule('/server/generation.ts');
  const {sql,saveWorkspace,loadWorkspace}=await vite.ssrLoadModule('/server/database.ts');const db=sql();

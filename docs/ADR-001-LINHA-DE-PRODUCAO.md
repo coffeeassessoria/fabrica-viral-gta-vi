@@ -14,7 +14,7 @@ Uma produção preserva uma versão do roteiro, parâmetros e cotação de todas
 
 Preset explícito: plano Pro informado pelo usuário, Veo 3.1 Lite, 720p, 9:16. Parâmetros e disponibilidade são validados no catálogo real. A duração é arredondada para a próxima opção disponível e aparece na revisão. Cenas maiores que o limite precisam ser divididas. A cotação expira em dez minutos; autorização da fila dura até 24 horas. Falta de retorno por 45 minutos pausa para consulta, sem reenviar.
 
-Vercel Queues publica somente identificadores. O worker busca o roteiro aprovado no Neon. O SDK recebe mensagens da fila com autenticação do serviço; um POST arbitrário não carrega um comando de geração direto. Lease de 120 segundos reduz concorrência, e o claim atômico `quoted → sending` é a proteção definitiva contra repetir o mesmo envio. Interrupção após o claim resulta em análise manual, nunca repetição automática.
+Vercel Queues publica somente identificadores. O worker busca o roteiro aprovado no Neon. As mensagens recebem HMAC de servidor, validado antes de consultar o banco. A assinatura cobre workspace e batch; um POST arbitrário não carrega um comando de geração autorizado. O SDK gerencia entrega e confirmação na fila. Lease de 120 segundos reduz concorrência, e o claim atômico `quoted → sending` é a proteção definitiva contra repetir o mesmo envio. Interrupção após o claim resulta em análise manual, nunca repetição automática.
 
 ## Opções consideradas
 

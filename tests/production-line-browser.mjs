@@ -50,7 +50,7 @@ try{
  const violations=(await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze()).violations;
  await writeFile('tests/artifacts/production-line-axe.json',JSON.stringify(violations,null,2));assert.deepEqual(violations,[]);
  for(const width of [320,390]){await page.setViewportSize({width,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}
- await page.getByRole('heading',{name:'2. Uma aprovação para todas as cenas',exact:true}).scrollIntoViewIfNeeded();
+ await page.locator('aside.studio-sidebar').waitFor({state:'hidden'});await page.getByRole('heading',{name:'2. Uma aprovação para todas as cenas',exact:true}).scrollIntoViewIfNeeded();
  await page.screenshot({path:'tests/artifacts/production-line-mobile.png',fullPage:false});
  await page.getByRole('checkbox',{name:/Aprovo este roteiro e autorizo gerar/}).check();await start.click();
  await page.getByRole('heading',{name:'Na fila',exact:true}).waitFor();assert.ok(queuedId);assert.equal(sends,0);
