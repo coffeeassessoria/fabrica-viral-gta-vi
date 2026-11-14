@@ -2,7 +2,7 @@ import {randomUUID} from 'node:crypto';
 import {loadWorkspace,sql,workspaceId,HttpError} from './database.js';
 import {connectionTools,kairogenCall,refreshConnection} from './integrations.js';
 import {validateProduction} from '../persistence/production.js';
-import {contract,check,credits,editorial,generationArgs,generationResult,quoteArgs,scriptHash,statusArgs,type Tool} from './kairogen-contract.js';
+import {contract,check,credits,editorial,generationArgs,generationResult,quoteArgs,scriptHash,statusArgs,payload,type Tool} from './kairogen-contract.js';
 export type GenerationDependencies={tools:(origin:string)=>Promise<Tool[]>;call:(name:string,args:Record<string,unknown>,origin:string)=>Promise<any>};
 const defaults:GenerationDependencies={tools:async(origin)=>{await refreshConnection('kairogen',origin);return connectionTools('kairogen');},call:kairogenCall};
 export const generationSchema=[
@@ -45,7 +45,9 @@ export async function generationOperation(input:Record<string,any>,origin:string
   const properties=c.generate.inputSchema.properties||{};
   const fields=Object.entries(properties).filter(([k])=>k!=='wait_for_completion').map(([name,schema]:[string,any])=>({name,...schema,required:(c.generate.inputSchema.required||[]).includes(name)}));
   if(fields.some((f:any)=>f.required&&!['string','number','integer','boolean'].includes(f.type)))throw new HttpError(409,'Este modelo exige referências estruturadas ainda não suportadas no painel.');
-  return {fields:fields.filter((f:any)=>['string','number','integer','boolean'].includes(f.type)),tools:tools.filter(t=>['generate_video','estimate_cost','get_generation','list_models'].includes(t.name))};
+  const read=async(name:string,args:Record<string,unknown>)=>{const tool=tools.find(t=>t.name===name);if(!tool)return null;check(tool,args);return payload(await deps.call(name,args,origin));};
+  const [catalog,account]=await Promise.all([read('list_models',{type:'video'}),read('get_credits',{})]);
+  return {fields:fields.filter((f:any)=>['string','number','integer','boolean'].includes(f.type)),catalog,account,tools:tools.filter(t=>['generate_video','estimate_cost','get_generation','list_models','get_credits'].includes(t.name))};
  }
  if(input.operation==='quote'){
   const c=await approved();const active=await db`SELECT id FROM fv_generation_jobs WHERE workspace_id=${wid} AND item_id=${input.itemId} AND status IN ('sending','processing','uncertain') LIMIT 1`;
